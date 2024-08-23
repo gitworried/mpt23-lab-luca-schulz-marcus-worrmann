@@ -1,0 +1,8 @@
+image: debian:bookworm
+build:
+  stage: build
+  tags: [Linux]
+  before_script:
+    - apt-get update && apt-get install -y make gcc hyperfine valgrind
+  script:
+    - make
