@@ -2,3 +2,5 @@
 *.o
 notes
 out
+logs
+benchmarks

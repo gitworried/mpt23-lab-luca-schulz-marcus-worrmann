@@ -3,8 +3,6 @@ TARGET=out/mpt_nn
 TEST_TARGET=out/mpt_nn_test
 
 # Benchmark output files
-HELGRIND_OUTPUT=out/helgrind.log
-VALGRIND_OUTPUT=out/valgrind.log
 
 # Flags and options
 OPTIMIZE=-O3
@@ -19,6 +17,7 @@ CC=gcc
 # Directories
 SRC_DIR=source
 OUT_DIR=out
+LOG_DIR=logs
 
 # The sources that make up the main executable.
 SRCS=$(filter-out %_test.c,$(wildcard $(SRC_DIR)/*.c))
@@ -43,6 +42,10 @@ all: build test
 # Ensure the output directory exists
 $(OUT_DIR):
 	mkdir -p $(OUT_DIR)
+
+# Ensure the logs directory exists
+$(LOG_DIR):
+	mkdir -p $(LOG_DIR)
 
 # Build the main program
 .PHONY: build
@@ -71,18 +74,20 @@ test: $(TEST_TARGET)
 
 # Test for thread errors with Helgrind
 .PHONY: helgrind
-helgrind: $(TEST_TARGET)
-	valgrind --tool=helgrind --log-file=$(HELGRIND_OUTPUT) ./$(TEST_TARGET)
-	@echo "Helgrind thread error results saved to $(HELGRIND_OUTPUT)"
+helgrind: $(TEST_TARGET) $(LOG_DIR)
+	valgrind --tool=helgrind --log-file=$(LOG_DIR)/helgrind.log ./$(TEST_TARGET)
+	valgrind --tool=helgrind --log-file=$(LOG_DIR)/helgrind_simd.log ./$(TARGET) simd 10000 784 10 10 10 0.5
+	@echo "Helgrind thread error results saved to $(LOG_DIR)"
 
 # Test for memory errors with Valgrind 
 .PHONY: valgrind
-valgrind: $(TEST_TARGET)
-	valgrind -s --leak-check=full --show-leak-kinds=all  --track-origins=yes --log-file=$(VALGRIND_OUTPUT) ./$(TEST_TARGET)
-	@echo "Valgrind memory error results saved to $(VALGRIND_OUTPUT)"
+valgrind: $(TEST_TARGET) $(LOG_DIR)
+	valgrind -s --leak-check=full --show-leak-kinds=all  --track-origins=yes --log-file=$(LOG_DIR)/valgrind.log ./$(TEST_TARGET)
+	valgrind -s --leak-check=full --show-leak-kinds=all  --track-origins=yes --log-file=$(LOG_DIR)/valgrind_sequential.log ./$(TARGET) sequential 10000 784 10 10 10 0.5
+	@echo "Valgrind memory error results saved to $(LOG_DIR)"
 
 # Benchmark using hyperfine
-benchmark: $(EXEC)
+benchmark: $(TARGET)
 	mkdir -p benchmarks
 	hyperfine \
 		--warmup 3 \
@@ -94,7 +99,6 @@ benchmark: $(EXEC)
 
 # Cleanup
 clean:
-	rm -Rf $(OUT_DIR) build *.results
+	rm -Rf $(OUT_DIR) build *.results $(LOG_DIR)
 
 -include $(DEPS)
-
