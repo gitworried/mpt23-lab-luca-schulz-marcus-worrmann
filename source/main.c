@@ -1,3 +1,14 @@
+/**
+ * @file main.c
+ * @authors Marcus Worrmann, Luca Schulz
+ * @brief main function file using all the functions declared in mpt_nn.h and mpt_utility.h to create a functioning running neural network thats trained with the MNIST data set.
+ * @version 1.0
+ * @date 2024-08-30
+ *
+ * @copyright Copyright (c) 2024
+ *
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -23,7 +34,6 @@ int main(int argc, char *argv[])
         return EXIT_FAILURE;
     }
 
-    // Determine the execution mode
     int mode = 0;
     if (strcmp(argv[1], "sequential") == 0)
     {
@@ -43,7 +53,6 @@ int main(int argc, char *argv[])
         return EXIT_FAILURE;
     }
 
-    // Parse network parameters
     int numTrainingSets = atoi(argv[2]);
     int numInputs = atoi(argv[3]);
     int numHiddenNodes = atoi(argv[4]);
@@ -51,7 +60,6 @@ int main(int argc, char *argv[])
     int epochs = atoi(argv[6]);
     double learningRate = atof(argv[7]);
 
-    // Allocate memory dynamically for the neural network
     double *hiddenLayer = malloc(numHiddenNodes * sizeof(double));
     double *outputLayer = malloc(numOutputs * sizeof(double));
     double *hiddenLayerBias = malloc(numHiddenNodes * sizeof(double));
@@ -70,16 +78,13 @@ int main(int argc, char *argv[])
     for (int i = 0; i < numTrainingSets; i++)
         training_outputs[i] = malloc(numOutputs * sizeof(double));
 
-    // Load MNIST data
     load_mnist(training_inputs, training_outputs, numTrainingSets, numInputs, numOutputs);
 
-    // Initialize weights and biases
     initialize_weights(hiddenWeights, numInputs, numHiddenNodes);
     initialize_weights(outputWeights, numHiddenNodes, numOutputs);
     initialize_bias(hiddenLayerBias, numHiddenNodes);
     initialize_bias(outputLayerBias, numOutputs);
 
-    // Training loop
     for (int epoch = 0; epoch < epochs; epoch++)
     {
         double totalLoss = 0.0;
@@ -96,7 +101,6 @@ int main(int argc, char *argv[])
                 }
             }
 
-            // Visualize the digit and print the expected output if -v is selected
             if (visualize)
             {
                 printf("Training on image %d (Epoch %d) - Expected output: %d\n", i + 1, epoch + 1, expectedLabel);
@@ -117,7 +121,6 @@ int main(int argc, char *argv[])
                 forward_pass_simd(training_inputs[i], hiddenLayer, outputLayer, hiddenLayerBias, outputLayerBias, hiddenWeights, outputWeights, numInputs, numHiddenNodes, numOutputs);
             }
 
-            // Calculate loss (Mean Squared Error)
             double loss = 0.0;
             for (int j = 0; j < numOutputs; j++)
             {
@@ -125,7 +128,6 @@ int main(int argc, char *argv[])
             }
             totalLoss += loss;
 
-            // Check if the prediction is correct
             int predictedLabel = 0;
             for (int j = 1; j < numOutputs; j++)
             {
@@ -147,7 +149,6 @@ int main(int argc, char *argv[])
                 correctPredictions++;
             }
 
-            // Backpropagation
             if (mode == 1)
             {
                 backpropagation_sequential(training_inputs[i], training_outputs[i], hiddenLayer, outputLayer, hiddenLayerBias, outputLayerBias, hiddenWeights, outputWeights, learningRate, numInputs, numHiddenNodes, numOutputs);
@@ -162,13 +163,11 @@ int main(int argc, char *argv[])
             }
         }
 
-        // Output training progress with detailed results
         double averageLoss = totalLoss / numTrainingSets;
         double accuracy = (double)correctPredictions / numTrainingSets * 100.0;
         printf("Epoch %d/%d - Loss: %.6f - Accuracy: %.2f%% (%d/%d)\n", epoch + 1, epochs, averageLoss, accuracy, correctPredictions, numTrainingSets);
     }
 
-    // Free allocated memory
     free(hiddenLayer);
     free(outputLayer);
     free(hiddenLayerBias);

@@ -91,7 +91,7 @@ erstellen.
 
 ## TODO
 
-[ ] Doxygen Doku<br>
+[x] Doxygen Doku<br>
 [ ] Benchmark Visualisierung (Mit python script oder R?) <br>
 [ ] Villeicht: Default Parameter zum starten des mpt_nn (z.B angepasst an den MNIST-Datensatz, also 60000 trainingsdaten, 784 eingangsneuronen... etc)<br>
 [ ] Code optimieren(Benchmarks) Zurzeit kommen komische Benchmark Ergebnisse raus. Sequentielles ausführen ist in den meisten Fällen deutlich schneller als parallel und SIMD. Das kann natürlich sein, aber ist eher unwahrscheinlich. (Programm auf mehreren Maschinen testen).<br>

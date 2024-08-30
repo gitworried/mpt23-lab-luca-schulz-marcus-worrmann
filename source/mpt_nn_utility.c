@@ -1,3 +1,7 @@
+/**
+ * 
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -14,8 +18,8 @@ void load_mnist(double **training_inputs, double **training_outputs, int numTrai
         exit(1);
     }
 
-    fseek(imageFile, 16, SEEK_SET); // Skip the header
-    fseek(labelFile, 8, SEEK_SET);  // Skip the header
+    fseek(imageFile, 16, SEEK_SET);
+    fseek(labelFile, 8, SEEK_SET);
 
     for (int i = 0; i < numTrainingSets; i++)
     {
@@ -27,7 +31,7 @@ void load_mnist(double **training_inputs, double **training_outputs, int numTrai
                 perror("Error reading image file");
                 exit(1);
             }
-            training_inputs[i][j] = pixel / 255.0; // Normalize pixel value to [0,1]
+            training_inputs[i][j] = pixel / 255.0;
         }
 
         unsigned char label = 0;
@@ -39,7 +43,7 @@ void load_mnist(double **training_inputs, double **training_outputs, int numTrai
 
         for (int k = 0; k < numOutputs; k++)
         {
-            training_outputs[i][k] = (label == k) ? 1.0 : 0.0; // One-hot encode label
+            training_outputs[i][k] = (label == k) ? 1.0 : 0.0;
         }
     }
 
@@ -54,7 +58,7 @@ void initialize_weights(double **weights, int rows, int cols)
     {
         for (int j = 0; j < cols; j++)
         {
-            weights[i][j] = (rand() / (double)RAND_MAX) - 0.5; // Initialize to small random values
+            weights[i][j] = (rand() / (double)RAND_MAX) - 0.5;
         }
     }
 }
@@ -64,7 +68,7 @@ void initialize_bias(double bias[], int size)
     srand((unsigned int)time(NULL));
     for (int i = 0; i < size; i++)
     {
-        bias[i] = (rand() / (double)RAND_MAX) - 0.5; // Initialize to small random values
+        bias[i] = (rand() / (double)RAND_MAX) - 0.5;
     }
 }
 

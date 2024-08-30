@@ -4,19 +4,16 @@
 #include "mpt_nn_utility.h"
 #include "math.h"
 
-// Utility function for sigmoid
 double sigmoid(double x)
 {
     return 1.0 / (1.0 + exp(-x));
 }
 
-// Utility function for sigmoid derivative
 double dSigmoid(double x)
 {
     return x * (1.0 - x);
 }
 
-// Sequential inference implementation
 void forward_pass_sequential(double inputs[], double hiddenLayer[], double outputLayer[],
                              double hiddenLayerBias[], double outputLayerBias[],
                              double **hiddenWeights, double **outputWeights,
@@ -43,7 +40,6 @@ void forward_pass_sequential(double inputs[], double hiddenLayer[], double outpu
     }
 }
 
-// Parallel inference implementation using OpenMP
 void forward_pass_parallel(double inputs[], double hiddenLayer[], double outputLayer[],
                            double hiddenLayerBias[], double outputLayerBias[],
                            double **hiddenWeights, double **outputWeights,
@@ -72,7 +68,6 @@ void forward_pass_parallel(double inputs[], double hiddenLayer[], double outputL
     }
 }
 
-// SIMD inference implementation using OpenMP
 void forward_pass_simd(double inputs[], double hiddenLayer[], double outputLayer[],
                        double hiddenLayerBias[], double outputLayerBias[],
                        double **hiddenWeights, double **outputWeights,
@@ -103,7 +98,6 @@ void forward_pass_simd(double inputs[], double hiddenLayer[], double outputLayer
     }
 }
 
-// Sequential backpropagation implementation
 void backpropagation_sequential(double inputs[], double target[], double hiddenLayer[], double outputLayer[],
                                 double hiddenLayerBias[], double outputLayerBias[],
                                 double **hiddenWeights, double **outputWeights,
@@ -112,14 +106,12 @@ void backpropagation_sequential(double inputs[], double target[], double hiddenL
     double deltaOutput[numOutputs];
     double deltaHidden[numHiddenNodes];
 
-    // Compute delta for output layer
     for (int i = 0; i < numOutputs; i++)
     {
         double error = target[i] - outputLayer[i];
         deltaOutput[i] = error * dSigmoid(outputLayer[i]);
     }
 
-    // Compute delta for hidden layer
     for (int i = 0; i < numHiddenNodes; i++)
     {
         double error = 0.0;
@@ -130,7 +122,6 @@ void backpropagation_sequential(double inputs[], double target[], double hiddenL
         deltaHidden[i] = error * dSigmoid(hiddenLayer[i]);
     }
 
-    // Update output weights and biases
     for (int i = 0; i < numOutputs; i++)
     {
         outputLayerBias[i] += deltaOutput[i] * lr;
@@ -140,7 +131,6 @@ void backpropagation_sequential(double inputs[], double target[], double hiddenL
         }
     }
 
-    // Update hidden weights and biases
     for (int i = 0; i < numHiddenNodes; i++)
     {
         hiddenLayerBias[i] += deltaHidden[i] * lr;
@@ -151,7 +141,6 @@ void backpropagation_sequential(double inputs[], double target[], double hiddenL
     }
 }
 
-// Parallel backpropagation using OpenMP
 void backpropagation_parallel(double inputs[], double target[], double hiddenLayer[], double outputLayer[],
                               double hiddenLayerBias[], double outputLayerBias[],
                               double **hiddenWeights, double **outputWeights,
@@ -160,7 +149,6 @@ void backpropagation_parallel(double inputs[], double target[], double hiddenLay
     double deltaOutput[numOutputs];
     double deltaHidden[numHiddenNodes];
 
-    // Compute delta for output layer in parallel
 #pragma omp parallel for
     for (int i = 0; i < numOutputs; i++)
     {
@@ -168,7 +156,6 @@ void backpropagation_parallel(double inputs[], double target[], double hiddenLay
         deltaOutput[i] = error * dSigmoid(outputLayer[i]);
     }
 
-    // Compute delta for hidden layer in parallel
 #pragma omp parallel for
     for (int i = 0; i < numHiddenNodes; i++)
     {
@@ -180,7 +167,6 @@ void backpropagation_parallel(double inputs[], double target[], double hiddenLay
         deltaHidden[i] = error * dSigmoid(hiddenLayer[i]);
     }
 
-    // Update output weights and biases in parallel
 #pragma omp parallel for collapse(2)
     for (int i = 0; i < numHiddenNodes; i++)
     {
@@ -198,7 +184,6 @@ void backpropagation_parallel(double inputs[], double target[], double hiddenLay
         outputLayerBias[i] += deltaOutput[i] * lr;
     }
 
-    // Update hidden weights and biases in parallel
 #pragma omp parallel for collapse(2)
     for (int i = 0; i < numInputs; i++)
     {
@@ -217,7 +202,6 @@ void backpropagation_parallel(double inputs[], double target[], double hiddenLay
     }
 }
 
-// SIMD backpropagation using OpenMP
 void backpropagation_simd(double inputs[], double target[], double hiddenLayer[], double outputLayer[],
                           double hiddenLayerBias[], double outputLayerBias[],
                           double **hiddenWeights, double **outputWeights,
@@ -226,7 +210,6 @@ void backpropagation_simd(double inputs[], double target[], double hiddenLayer[]
     double deltaOutput[numOutputs];
     double deltaHidden[numHiddenNodes];
 
-    // Compute delta for output layer with SIMD
 #pragma omp parallel for simd
     for (int i = 0; i < numOutputs; i++)
     {
@@ -234,7 +217,6 @@ void backpropagation_simd(double inputs[], double target[], double hiddenLayer[]
         deltaOutput[i] = error * dSigmoid(outputLayer[i]);
     }
 
-    // Compute delta for hidden layer with SIMD
 #pragma omp parallel for simd
     for (int i = 0; i < numHiddenNodes; i++)
     {
@@ -247,7 +229,6 @@ void backpropagation_simd(double inputs[], double target[], double hiddenLayer[]
         deltaHidden[i] = error * dSigmoid(hiddenLayer[i]);
     }
 
-    // Update output weights and biases with SIMD
 #pragma omp parallel for simd collapse(2)
     for (int i = 0; i < numHiddenNodes; i++)
     {
@@ -265,7 +246,6 @@ void backpropagation_simd(double inputs[], double target[], double hiddenLayer[]
         outputLayerBias[i] += deltaOutput[i] * lr;
     }
 
-    // Update hidden weights and biases with SIMD
 #pragma omp parallel for simd collapse(2)
     for (int i = 0; i < numInputs; i++)
     {

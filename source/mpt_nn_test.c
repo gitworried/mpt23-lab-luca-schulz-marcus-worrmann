@@ -1,3 +1,14 @@
+/**
+ * @file mpt_nn_test.c
+ * @authors Marcus Worrmann, Luca Schulz
+ * @brief Unit tests for the mpt_nn functions defined in mpt_nn.h and mpt_nn_utility.h
+ * @version 1.0
+ * @date 2024-08-30
+ *
+ * @copyright Copyright (c) 2024
+ *
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
@@ -6,7 +17,15 @@
 #include "mpt_nn.h"
 #include "mpt_nn_utility.h"
 
-// Function to allocate and check memory
+/**
+ * @brief Allocates memory for a 2D array (weights matrix).
+ *
+ * @param rows Number of rows.
+ * @param cols Number of columns.
+ * @return double** Pointer to the allocated 2D array.
+ *
+ * Allocates memory for a 2D array that will hold the weights of a neural network layer.
+ */
 static double **allocate_weights(int rows, int cols)
 {
     double **weights = malloc(rows * sizeof(double *));
@@ -33,7 +52,16 @@ static double **allocate_weights(int rows, int cols)
     return weights;
 }
 
-// Function to free allocated weights
+/**
+ * @brief Frees the memory allocated for a 2D array (weights matrix).
+ *
+ * Deallocates the memory that was previously allocated for a 2D array used to store weights.
+ *
+ * @param weights Pointer to the 2D array to be freed.
+ * @param rows Number of rows.
+ *
+ *
+ */
 static void free_weights(double **weights, int rows)
 {
     for (int i = 0; i < rows; i++)
@@ -43,7 +71,12 @@ static void free_weights(double **weights, int rows)
     free(weights);
 }
 
-// Test the sigmoid function
+/**
+ * @brief Tests the sigmoid function.
+ *
+ * Tests the sigmoid function with known input values and asserts the correctness of the output.
+ * E.g sigmoid of 0 should be 0.5
+ */
 static void test_sigmoid()
 {
     assert(sigmoid(0) == 0.5);
@@ -52,7 +85,14 @@ static void test_sigmoid()
     printf("test_sigmoid passed.\n");
 }
 
-// Test the initialization of weights
+/**
+ * @brief Tests the initialize_weights function.
+ *
+ * Verifies that the initialize_weights function correctly initializes the weights to small random values in an expected range.
+ *
+ * Initializes a small matrix and checks, if all values are initialized to non zero small values.
+ * Asserts the correct allocation of the matrix
+ */
 static void test_initialize_weights()
 {
     int rows = 2, cols = 3;
@@ -72,7 +112,17 @@ static void test_initialize_weights()
     printf("test_initialize_weights passed.\n");
 }
 
-// Test the forward pass (sequential)
+/**
+ * @brief Tests the forward_pass_sequential function.
+ *
+ * Checks that the forward_pass_sequential function correctly computes the output of the mpt_nn neural network.
+ *
+ * Initializes values for input, hidden layer etc....
+ * allocates memory for weigths.
+ * Calls forward_pass_sequential.
+ * Asserts that the output layer containes the correct values in a specific range.
+ *
+ */
 static void test_forward_pass()
 {
     int numInputs = 2, numHiddenNodes = 2, numOutputs = 1;
@@ -94,15 +144,23 @@ static void test_forward_pass()
 
     forward_pass_sequential(inputs, hiddenLayer, outputLayer, hiddenLayerBias, outputLayerBias, hiddenWeights, outputWeights, numInputs, numHiddenNodes, numOutputs);
 
-    assert(outputLayer[0] > 0 && outputLayer[0] < 1); // Basic range check
-
+    assert(outputLayer[0] > 0 && outputLayer[0] < 1);
     free_weights(hiddenWeights, numInputs);
     free_weights(outputWeights, numHiddenNodes);
 
     printf("test_forward_pass (sequential) passed.\n");
 }
 
-// Test forward pass (parallel)
+/**
+ * @brief Tests the forward_pass_parallel function.
+ *
+ * Cecks that the forward_pass_parallel function correctly computes the output of the mpt_nn neural network in parallel.
+ *
+ * Initializes values for input, hidden layer etc....
+ * allocates memory for weigths.
+ * Calls forward_pass_parallel.
+ * Asserts that the output layer containes the correct values in a specific range.
+ */
 static void test_forward_pass_parallel()
 {
     int numInputs = 2, numHiddenNodes = 2, numOutputs = 1;
@@ -132,7 +190,17 @@ static void test_forward_pass_parallel()
     printf("test_forward_pass (parallel) passed.\n");
 }
 
-// Test forward pass (SIMD)
+/**
+ * @brief Tests the forward_pass_simd function.
+ *
+ * Checks that the forward_pass_simd function correctly computes the output of the mpt_nn neural network using SIMD.
+ *
+ * Initializes values for input, hidden layer etc....
+ * allocates memory for weigths.
+ * Calls forward_pass_simd.
+ * Asserts that the output layer containes the correct values in a specific range.
+ *
+ */
 static void test_forward_pass_simd()
 {
     int numInputs = 2, numHiddenNodes = 2, numOutputs = 1;
@@ -162,7 +230,17 @@ static void test_forward_pass_simd()
     printf("test_forward_pass (SIMD) passed.\n");
 }
 
-// Test backpropagation (sequential)
+/**
+ * @brief Tests the backpropagation_sequential function.
+ *
+ * Checks that the backpropagation_sequential function correctly updates the weights and biases of the mpt_nn neural network.
+ *
+ * Initializes values for input, hidden layer etc....
+ * allocates memory for weigths.
+ * Calls forward_pass_sequential and baclpropagation_sequential.
+ * Asserts that the weigths and biases are updated correctly
+ *
+ */
 static void test_backpropagation()
 {
     int numInputs = 2, numHiddenNodes = 2, numOutputs = 1;
@@ -186,7 +264,6 @@ static void test_backpropagation()
     forward_pass_sequential(inputs, hiddenLayer, outputLayer, hiddenLayerBias, outputLayerBias, hiddenWeights, outputWeights, numInputs, numHiddenNodes, numOutputs);
     backpropagation_sequential(inputs, target, hiddenLayer, outputLayer, hiddenLayerBias, outputLayerBias, hiddenWeights, outputWeights, 0.1, numInputs, numHiddenNodes, numOutputs);
 
-    // Check that the weights have been updated
     assert(hiddenWeights[0][0] != 0.1);
     assert(outputWeights[0][0] != 0.5);
 
@@ -196,7 +273,16 @@ static void test_backpropagation()
     printf("test_backpropagation (sequential) passed.\n");
 }
 
-// Test backpropagation (parallel)
+/**
+ * @brief Tests the backpropagation_parallel function.
+ *
+ * Checks that the backpropagation_parallel function correctly updates the weights and biases of the mpt_nn neural network in parallel.
+ *
+ * Initializes values for input, hidden layer etc....
+ * allocates memory for weigths.
+ * Calls forward_pass_parallel and backpasspropagation_parallel.
+ * Asserts that the weigths and biases are updated correctly
+ */
 static void test_backpropagation_parallel()
 {
     int numInputs = 2, numHiddenNodes = 2, numOutputs = 1;
@@ -229,7 +315,16 @@ static void test_backpropagation_parallel()
     printf("test_backpropagation (parallel) passed.\n");
 }
 
-// Test backpropagation (SIMD)
+/**
+ * @brief Tests the backpropagation_simd function.
+ *
+ * This function checks that the backpropagation_simd function correctly updates the weights and biases of a simple neural network using SIMD.
+ *
+ * Initializes values for input, hidden layer etc....
+ * allocates memory for weigths.
+ * Calls forward_pass_simd and backpropagation_simd.
+ * Asserts that the weigths and biases are updated correctly
+ */
 static void test_backpropagation_simd()
 {
     int numInputs = 2, numHiddenNodes = 2, numOutputs = 1;
@@ -262,7 +357,13 @@ static void test_backpropagation_simd()
     printf("test_backpropagation (SIMD) passed.\n");
 }
 
-// Main function to run all tests
+/**
+ * @brief Main function for running all unit tests.
+ *
+ * Calls all test functions defined above and reports the results.
+ *
+ * @return Returns 0 if all tests pass.
+ */
 int main()
 {
     test_sigmoid();
