@@ -257,3 +257,4 @@ void backpropagation_simd(double inputs[], double target[], double hiddenLayer[]
         }
     }
 }
+

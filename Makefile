@@ -1,6 +1,10 @@
 # The name of the main executable
-TARGET=out/my_nn_program
+TARGET=out/mpt_nn
 TEST_TARGET=out/mpt_nn_test
+
+# Benchmark output files
+HELGRIND_OUTPUT=out/benchmark_helgrind.log
+VALGRIND_OUTPUT=out/benchmark_valgrind.log
 
 # Flags and options
 OPTIMIZE=-O3
@@ -64,6 +68,18 @@ $(TEST_TARGET): $(TEST_OBJS) $(TEST_DEPS)
 .PHONY: test
 test: $(TEST_TARGET)
 	./$(TEST_TARGET)
+
+# Benchmark with Helgrind
+.PHONY: benchmark_helgrind
+benchmark_helgrind: $(TEST_TARGET)
+	valgrind --tool=helgrind --log-file=$(HELGRIND_OUTPUT) ./$(TEST_TARGET)
+	@echo "Helgrind benchmark results saved to $(HELGRIND_OUTPUT)"
+
+# Benchmark with Valgrind (Memory)
+.PHONY: benchmark_valgrind
+benchmark_valgrind: $(TEST_TARGET)
+	valgrind --leak-check=full --track-origins=yes --log-file=$(VALGRIND_OUTPUT) ./$(TEST_TARGET)
+	@echo "Valgrind benchmark results saved to $(VALGRIND_OUTPUT)"
 
 # Cleanup
 clean:
