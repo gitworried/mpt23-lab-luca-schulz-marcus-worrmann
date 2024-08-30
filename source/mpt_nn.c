@@ -160,7 +160,7 @@ void backpropagation_parallel(double inputs[], double target[], double hiddenLay
     double deltaOutput[numOutputs];
     double deltaHidden[numHiddenNodes];
 
-// Compute delta for output layer in parallel
+    // Compute delta for output layer in parallel
 #pragma omp parallel for
     for (int i = 0; i < numOutputs; i++)
     {
@@ -168,7 +168,7 @@ void backpropagation_parallel(double inputs[], double target[], double hiddenLay
         deltaOutput[i] = error * dSigmoid(outputLayer[i]);
     }
 
-// Compute delta for hidden layer in parallel
+    // Compute delta for hidden layer in parallel
 #pragma omp parallel for
     for (int i = 0; i < numHiddenNodes; i++)
     {
@@ -180,26 +180,40 @@ void backpropagation_parallel(double inputs[], double target[], double hiddenLay
         deltaHidden[i] = error * dSigmoid(hiddenLayer[i]);
     }
 
-// Update output weights and biases in parallel
-#pragma omp parallel for
-    for (int i = 0; i < numOutputs; i++)
+    // Update output weights and biases in parallel
+#pragma omp parallel for collapse(2)
+    for (int i = 0; i < numHiddenNodes; i++)
     {
-        outputLayerBias[i] += deltaOutput[i] * lr;
-        for (int j = 0; j < numHiddenNodes; j++)
+        for (int j = 0; j < numOutputs; j++)
         {
-            outputWeights[j][i] += hiddenLayer[j] * deltaOutput[i] * lr;
+#pragma omp atomic
+            outputWeights[i][j] += hiddenLayer[i] * deltaOutput[j] * lr;
         }
     }
 
-// Update hidden weights and biases in parallel
+#pragma omp parallel for
+    for (int i = 0; i < numOutputs; i++)
+    {
+#pragma omp atomic
+        outputLayerBias[i] += deltaOutput[i] * lr;
+    }
+
+    // Update hidden weights and biases in parallel
+#pragma omp parallel for collapse(2)
+    for (int i = 0; i < numInputs; i++)
+    {
+        for (int j = 0; j < numHiddenNodes; j++)
+        {
+#pragma omp atomic
+            hiddenWeights[i][j] += inputs[i] * deltaHidden[j] * lr;
+        }
+    }
+
 #pragma omp parallel for
     for (int i = 0; i < numHiddenNodes; i++)
     {
+#pragma omp atomic
         hiddenLayerBias[i] += deltaHidden[i] * lr;
-        for (int j = 0; j < numInputs; j++)
-        {
-            hiddenWeights[j][i] += inputs[j] * deltaHidden[i] * lr;
-        }
     }
 }
 
@@ -212,7 +226,7 @@ void backpropagation_simd(double inputs[], double target[], double hiddenLayer[]
     double deltaOutput[numOutputs];
     double deltaHidden[numHiddenNodes];
 
-// Compute delta for output layer with SIMD
+    // Compute delta for output layer with SIMD
 #pragma omp parallel for simd
     for (int i = 0; i < numOutputs; i++)
     {
@@ -220,7 +234,7 @@ void backpropagation_simd(double inputs[], double target[], double hiddenLayer[]
         deltaOutput[i] = error * dSigmoid(outputLayer[i]);
     }
 
-// Compute delta for hidden layer with SIMD
+    // Compute delta for hidden layer with SIMD
 #pragma omp parallel for simd
     for (int i = 0; i < numHiddenNodes; i++)
     {
@@ -233,28 +247,39 @@ void backpropagation_simd(double inputs[], double target[], double hiddenLayer[]
         deltaHidden[i] = error * dSigmoid(hiddenLayer[i]);
     }
 
-// Update output weights and biases with SIMD
+    // Update output weights and biases with SIMD
+#pragma omp parallel for simd collapse(2)
+    for (int i = 0; i < numHiddenNodes; i++)
+    {
+        for (int j = 0; j < numOutputs; j++)
+        {
+#pragma omp atomic
+            outputWeights[i][j] += hiddenLayer[i] * deltaOutput[j] * lr;
+        }
+    }
+
 #pragma omp parallel for simd
     for (int i = 0; i < numOutputs; i++)
     {
+#pragma omp atomic
         outputLayerBias[i] += deltaOutput[i] * lr;
-#pragma omp simd
+    }
+
+    // Update hidden weights and biases with SIMD
+#pragma omp parallel for simd collapse(2)
+    for (int i = 0; i < numInputs; i++)
+    {
         for (int j = 0; j < numHiddenNodes; j++)
         {
-            outputWeights[j][i] += hiddenLayer[j] * deltaOutput[i] * lr;
+#pragma omp atomic
+            hiddenWeights[i][j] += inputs[i] * deltaHidden[j] * lr;
         }
     }
 
-// Update hidden weights and biases with SIMD
 #pragma omp parallel for simd
     for (int i = 0; i < numHiddenNodes; i++)
     {
+#pragma omp atomic
         hiddenLayerBias[i] += deltaHidden[i] * lr;
-#pragma omp simd
-        for (int j = 0; j < numInputs; j++)
-        {
-            hiddenWeights[j][i] += inputs[j] * deltaHidden[i] * lr;
-        }
     }
 }
-

@@ -7,9 +7,18 @@
 
 int main(int argc, char *argv[])
 {
-    if (argc < 8)
-    { // Ensure correct number of arguments
-        fprintf(stderr, "Usage: %s <mode> <numTrainingSets> <numInputs> <numHiddenNodes> <numOutputs> <epochs> <learningRate>\n", argv[0]);
+    int visualize = 0;
+
+    if (argc > 1 && strcmp(argv[1], "-v") == 0)
+    {
+        visualize = 1;
+        argc--;
+        argv++;
+    }
+
+    if (argc < 7)
+    {
+        fprintf(stderr, "Usage: %s [-v] <mode> <numTrainingSets> <numInputs> <numHiddenNodes> <numOutputs> <epochs> <learningRate>\n", argv[0]);
         fprintf(stderr, "Modes: sequential, parallel, simd\n");
         return EXIT_FAILURE;
     }
@@ -86,9 +95,14 @@ int main(int argc, char *argv[])
                     expectedLabel = j;
                 }
             }
-            // Visualize the digit and print the expected output
-            printf("Training on image %d (Epoch %d) - Expected output: %d\n", i + 1, epoch + 1, expectedLabel);
-            visualize_mnist_digit(training_inputs[i], numInputs);
+
+            // Visualize the digit and print the expected output if -v is selected
+            if (visualize)
+            {
+                printf("Training on image %d (Epoch %d) - Expected output: %d\n", i + 1, epoch + 1, expectedLabel);
+                visualize_mnist_digit(training_inputs[i], numInputs);
+            }
+
             // Forward pass
             if (mode == 1)
             {

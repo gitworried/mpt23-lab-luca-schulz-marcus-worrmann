@@ -6,6 +6,42 @@
 #include "mpt_nn.h"
 #include "mpt_nn_utility.h"
 
+// Function to allocate and check memory
+static double **allocate_weights(int rows, int cols)
+{
+    double **weights = malloc(rows * sizeof(double *));
+    if (!weights)
+    {
+        fprintf(stderr, "Failed to allocate memory for weights\n");
+        exit(EXIT_FAILURE);
+    }
+
+    for (int i = 0; i < rows; i++)
+    {
+        weights[i] = malloc(cols * sizeof(double));
+        if (!weights[i])
+        {
+            fprintf(stderr, "Failed to allocate memory for weights[%d]\n", i);
+            for (int j = 0; j < i; j++)
+            {
+                free(weights[j]);
+            }
+            free(weights);
+            exit(EXIT_FAILURE);
+        }
+    }
+    return weights;
+}
+
+// Function to free allocated weights
+static void free_weights(double **weights, int rows)
+{
+    for (int i = 0; i < rows; i++)
+    {
+        free(weights[i]);
+    }
+    free(weights);
+}
 
 // Test the sigmoid function
 static void test_sigmoid()
@@ -20,11 +56,7 @@ static void test_sigmoid()
 static void test_initialize_weights()
 {
     int rows = 2, cols = 3;
-    double **weights = malloc(rows * sizeof(double *));
-    for (int i = 0; i < rows; i++)
-    {
-        weights[i] = malloc(cols * sizeof(double));
-    }
+    double **weights = allocate_weights(rows, cols);
 
     initialize_weights(weights, rows, cols);
 
@@ -34,9 +66,8 @@ static void test_initialize_weights()
         {
             assert(weights[i][j] >= -0.5 && weights[i][j] <= 0.5);
         }
-        free(weights[i]);
     }
-    free(weights);
+    free_weights(weights, rows);
 
     printf("test_initialize_weights passed.\n");
 }
@@ -51,13 +82,8 @@ static void test_forward_pass()
     double hiddenLayerBias[2] = {0.1, 0.2};
     double outputLayerBias[1] = {0.3};
 
-    double *hiddenWeights[2];
-    double *outputWeights[2];
-    for (int i = 0; i < 2; i++)
-    {
-        hiddenWeights[i] = malloc(2 * sizeof(double));
-        outputWeights[i] = malloc(1 * sizeof(double));
-    }
+    double **hiddenWeights = allocate_weights(numInputs, numHiddenNodes);
+    double **outputWeights = allocate_weights(numHiddenNodes, numOutputs);
 
     hiddenWeights[0][0] = 0.1;
     hiddenWeights[0][1] = 0.2;
@@ -70,11 +96,8 @@ static void test_forward_pass()
 
     assert(outputLayer[0] > 0 && outputLayer[0] < 1); // Basic range check
 
-    for (int i = 0; i < 2; i++)
-    {
-        free(hiddenWeights[i]);
-        free(outputWeights[i]);
-    }
+    free_weights(hiddenWeights, numInputs);
+    free_weights(outputWeights, numHiddenNodes);
 
     printf("test_forward_pass (sequential) passed.\n");
 }
@@ -89,13 +112,8 @@ static void test_forward_pass_parallel()
     double hiddenLayerBias[2] = {0.1, 0.2};
     double outputLayerBias[1] = {0.3};
 
-    double *hiddenWeights[2];
-    double *outputWeights[2];
-    for (int i = 0; i < 2; i++)
-    {
-        hiddenWeights[i] = malloc(2 * sizeof(double));
-        outputWeights[i] = malloc(1 * sizeof(double));
-    }
+    double **hiddenWeights = allocate_weights(numInputs, numHiddenNodes);
+    double **outputWeights = allocate_weights(numHiddenNodes, numOutputs);
 
     hiddenWeights[0][0] = 0.1;
     hiddenWeights[0][1] = 0.2;
@@ -108,11 +126,8 @@ static void test_forward_pass_parallel()
 
     assert(outputLayer[0] > 0 && outputLayer[0] < 1);
 
-    for (int i = 0; i < 2; i++)
-    {
-        free(hiddenWeights[i]);
-        free(outputWeights[i]);
-    }
+    free_weights(hiddenWeights, numInputs);
+    free_weights(outputWeights, numHiddenNodes);
 
     printf("test_forward_pass (parallel) passed.\n");
 }
@@ -127,13 +142,8 @@ static void test_forward_pass_simd()
     double hiddenLayerBias[2] = {0.1, 0.2};
     double outputLayerBias[1] = {0.3};
 
-    double *hiddenWeights[2];
-    double *outputWeights[2];
-    for (int i = 0; i < 2; i++)
-    {
-        hiddenWeights[i] = malloc(2 * sizeof(double));
-        outputWeights[i] = malloc(1 * sizeof(double));
-    }
+    double **hiddenWeights = allocate_weights(numInputs, numHiddenNodes);
+    double **outputWeights = allocate_weights(numHiddenNodes, numOutputs);
 
     hiddenWeights[0][0] = 0.1;
     hiddenWeights[0][1] = 0.2;
@@ -146,11 +156,8 @@ static void test_forward_pass_simd()
 
     assert(outputLayer[0] > 0 && outputLayer[0] < 1);
 
-    for (int i = 0; i < 2; i++)
-    {
-        free(hiddenWeights[i]);
-        free(outputWeights[i]);
-    }
+    free_weights(hiddenWeights, numInputs);
+    free_weights(outputWeights, numHiddenNodes);
 
     printf("test_forward_pass (SIMD) passed.\n");
 }
@@ -166,13 +173,8 @@ static void test_backpropagation()
     double hiddenLayerBias[2] = {0.1, 0.2};
     double outputLayerBias[1] = {0.3};
 
-    double *hiddenWeights[2];
-    double *outputWeights[2];
-    for (int i = 0; i < 2; i++)
-    {
-        hiddenWeights[i] = malloc(2 * sizeof(double));
-        outputWeights[i] = malloc(1 * sizeof(double));
-    }
+    double **hiddenWeights = allocate_weights(numInputs, numHiddenNodes);
+    double **outputWeights = allocate_weights(numHiddenNodes, numOutputs);
 
     hiddenWeights[0][0] = 0.1;
     hiddenWeights[0][1] = 0.2;
@@ -188,11 +190,8 @@ static void test_backpropagation()
     assert(hiddenWeights[0][0] != 0.1);
     assert(outputWeights[0][0] != 0.5);
 
-    for (int i = 0; i < 2; i++)
-    {
-        free(hiddenWeights[i]);
-        free(outputWeights[i]);
-    }
+    free_weights(hiddenWeights, numInputs);
+    free_weights(outputWeights, numHiddenNodes);
 
     printf("test_backpropagation (sequential) passed.\n");
 }
@@ -208,13 +207,8 @@ static void test_backpropagation_parallel()
     double hiddenLayerBias[2] = {0.1, 0.2};
     double outputLayerBias[1] = {0.3};
 
-    double *hiddenWeights[2];
-    double *outputWeights[2];
-    for (int i = 0; i < 2; i++)
-    {
-        hiddenWeights[i] = malloc(2 * sizeof(double));
-        outputWeights[i] = malloc(1 * sizeof(double));
-    }
+    double **hiddenWeights = allocate_weights(numInputs, numHiddenNodes);
+    double **outputWeights = allocate_weights(numHiddenNodes, numOutputs);
 
     hiddenWeights[0][0] = 0.1;
     hiddenWeights[0][1] = 0.2;
@@ -229,11 +223,8 @@ static void test_backpropagation_parallel()
     assert(hiddenWeights[0][0] != 0.1);
     assert(outputWeights[0][0] != 0.5);
 
-    for (int i = 0; i < 2; i++)
-    {
-        free(hiddenWeights[i]);
-        free(outputWeights[i]);
-    }
+    free_weights(hiddenWeights, numInputs);
+    free_weights(outputWeights, numHiddenNodes);
 
     printf("test_backpropagation (parallel) passed.\n");
 }
@@ -249,13 +240,8 @@ static void test_backpropagation_simd()
     double hiddenLayerBias[2] = {0.1, 0.2};
     double outputLayerBias[1] = {0.3};
 
-    double *hiddenWeights[2];
-    double *outputWeights[2];
-    for (int i = 0; i < 2; i++)
-    {
-        hiddenWeights[i] = malloc(2 * sizeof(double));
-        outputWeights[i] = malloc(1 * sizeof(double));
-    }
+    double **hiddenWeights = allocate_weights(numInputs, numHiddenNodes);
+    double **outputWeights = allocate_weights(numHiddenNodes, numOutputs);
 
     hiddenWeights[0][0] = 0.1;
     hiddenWeights[0][1] = 0.2;
@@ -270,11 +256,8 @@ static void test_backpropagation_simd()
     assert(hiddenWeights[0][0] != 0.1);
     assert(outputWeights[0][0] != 0.5);
 
-    for (int i = 0; i < 2; i++)
-    {
-        free(hiddenWeights[i]);
-        free(outputWeights[i]);
-    }
+    free_weights(hiddenWeights, numInputs);
+    free_weights(outputWeights, numHiddenNodes);
 
     printf("test_backpropagation (SIMD) passed.\n");
 }
@@ -293,4 +276,3 @@ int main()
     printf("All tests passed.\n");
     return 0;
 }
-

@@ -3,8 +3,8 @@ TARGET=out/mpt_nn
 TEST_TARGET=out/mpt_nn_test
 
 # Benchmark output files
-HELGRIND_OUTPUT=out/benchmark_helgrind.log
-VALGRIND_OUTPUT=out/benchmark_valgrind.log
+HELGRIND_OUTPUT=out/helgrind.log
+VALGRIND_OUTPUT=out/valgrind.log
 
 # Flags and options
 OPTIMIZE=-O3
@@ -69,17 +69,28 @@ $(TEST_TARGET): $(TEST_OBJS) $(TEST_DEPS)
 test: $(TEST_TARGET)
 	./$(TEST_TARGET)
 
-# Benchmark with Helgrind
-.PHONY: benchmark_helgrind
-benchmark_helgrind: $(TEST_TARGET)
+# Test for thread errors with Helgrind
+.PHONY: helgrind
+helgrind: $(TEST_TARGET)
 	valgrind --tool=helgrind --log-file=$(HELGRIND_OUTPUT) ./$(TEST_TARGET)
-	@echo "Helgrind benchmark results saved to $(HELGRIND_OUTPUT)"
+	@echo "Helgrind thread error results saved to $(HELGRIND_OUTPUT)"
 
-# Benchmark with Valgrind (Memory)
-.PHONY: benchmark_valgrind
-benchmark_valgrind: $(TEST_TARGET)
-	valgrind --leak-check=full --track-origins=yes --log-file=$(VALGRIND_OUTPUT) ./$(TEST_TARGET)
-	@echo "Valgrind benchmark results saved to $(VALGRIND_OUTPUT)"
+# Test for memory errors with Valgrind 
+.PHONY: valgrind
+valgrind: $(TEST_TARGET)
+	valgrind -s --leak-check=full --show-leak-kinds=all  --track-origins=yes --log-file=$(VALGRIND_OUTPUT) ./$(TEST_TARGET)
+	@echo "Valgrind memory error results saved to $(VALGRIND_OUTPUT)"
+
+# Benchmark using hyperfine
+benchmark: $(EXEC)
+	mkdir -p benchmarks
+	hyperfine \
+		--warmup 3 \
+		--show-output \
+		--export-markdown benchmarks/benchmark_results.md \
+        './out/mpt_nn sequential 10000 784 128 10 10 0.01' \
+        './out/mpt_nn parallel 10000 784 128 10 10 0.01' \
+        './out/mpt_nn simd 10000 784 128 10 10 0.01'
 
 # Cleanup
 clean:
