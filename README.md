@@ -1,4 +1,4 @@
-# MPT Nueronales Netzwerk für den MNIST-Datensatz
+# MPT Neuronales Netzwerk für den MNIST-Datensatz
 
 Dieses Projekt implementiert ein einfaches neuronales Netzwerk zur Klassifikation des MNIST-Datensatzes. Das Netzwerk unterstützt verschiedene Ausführungsmodi (sequentiell, parallel und SIMD) und kann über die Kommandozeile konfiguriert werden.
 
