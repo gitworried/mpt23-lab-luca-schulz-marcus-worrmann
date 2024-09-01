@@ -91,7 +91,7 @@ erstellen.
 
 ## Dokumentation
 
-Zurzeit ist es leider nur via Doxygen möglich detaillierte Auskunft über die funktionen des mpt_nn.<br>
+Zurzeit ist es leider nur via Doxygen möglich detaillierte Auskunft über die funktionen des mpt_nn zu erhalten.<br>
 Dabei lässt sich ein Doxygen Dokumentations Ordner über die Kommandozeile kompilieren. <br>
 
 ```bash
@@ -108,9 +108,9 @@ Um eine PDF zu generieren.
 
 ## TODO
 
-[x] Doxygen Doku<br>
-[ ] Benchmark Visualisierung (Mit python script oder R?) <br>
-[ ] Villeicht: Default Parameter zum starten des mpt_nn (z.B angepasst an den MNIST-Datensatz, also 60000 trainingsdaten, 784 eingangsneuronen... etc)<br>
-[ ] Code optimieren(Benchmarks) Zurzeit kommen komische Benchmark Ergebnisse raus. Sequentielles ausführen ist in den meisten Fällen deutlich schneller als parallel und SIMD. Das kann natürlich sein, aber ist eher unwahrscheinlich. (Programm auf mehreren Maschinen testen).<br>
-[ ] Code optimieren(helgrind, valgrind): helgrind zeigt noch etliche potentielle race conditions an.<br>
-[ ] Doku schreiben.<br>
+- [x] Doxygen Doku<br>
+- [ ] Benchmark Visualisierung (Mit python script oder R?) <br>
+- [ ] Villeicht: Default Parameter zum starten des mpt_nn (z.B angepasst an den MNIST-Datensatz, also 60000 trainingsdaten, 784 eingangsneuronen... etc)<br>
+- [ ] Code optimieren(Benchmarks) Zurzeit kommen komische Benchmark Ergebnisse raus. Sequentielles ausführen ist in den meisten Fällen deutlich schneller als parallel und SIMD. Das kann natürlich sein, aber ist eher unwahrscheinlich. (Programm auf mehreren Maschinen testen).<br>
+- [ ] Code optimieren(helgrind, valgrind): helgrind zeigt noch etliche potentielle race conditions an.<br>
+- [ ] Doku schreiben.<br>
