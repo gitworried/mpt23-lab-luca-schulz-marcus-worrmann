@@ -42,7 +42,7 @@ Die Parameter sind wie folgt definiert:
 ### Beispiel
 
 ```bash
-./out/mpt_nn simd 60000 784 10 10 10 0.5
+./out/mpt_nn simd 60000 784 10 10 10 0.1
 ```
 
 Startet das Training mit dem MNIST-Datensatz mit:
@@ -52,7 +52,7 @@ Startet das Training mit dem MNIST-Datensatz mit:
 - 10 versteckte schichten
 - 10 Outputs
 - 10 epochen
-- Einer Lernrate von 0.01
+- Einer Lernrate von 0.1
 
 ## Unit Tests
 
@@ -71,7 +71,7 @@ Damit sichergestellt werden kann, dass es keine memory leaks oder thread errors 
 Mit
 
 ```bash
-make valgrinde
+make valgrind
 make helgrind
 ```
 

@@ -99,6 +99,6 @@ benchmark: $(TARGET)
 
 # Cleanup
 clean:
-	rm -Rf $(OUT_DIR) build *.results $(LOG_DIR)
+	rm -Rf $(OUT_DIR) build *.results $(LOG_DIR) documentation doxygen
 
 -include $(DEPS)
