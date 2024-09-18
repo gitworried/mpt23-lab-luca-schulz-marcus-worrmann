@@ -3,6 +3,9 @@ TARGET=out/mpt_nn
 TEST_TARGET=out/mpt_nn_test
 
 # Benchmark output files
+BENCHMARK_RESULT=benchmarks/benchmark_results.md
+PLOT_SCRIPT=source/mpt_nn_plot.R
+PLOT_OUTPUT=benchmarks/benchmark_plot.png
 
 # Flags and options
 OPTIMIZE=-O3
@@ -47,6 +50,10 @@ $(OUT_DIR):
 $(LOG_DIR):
 	mkdir -p $(LOG_DIR)
 
+# Ensure the benchmarks directory exists
+benchmarks:
+	mkdir -p benchmarks
+
 # Build the main program
 .PHONY: build
 build: $(TARGET)
@@ -87,18 +94,29 @@ valgrind: $(TEST_TARGET) $(LOG_DIR)
 	@echo "Valgrind memory error results saved to $(LOG_DIR)"
 
 # Benchmark using hyperfine
-benchmark: $(TARGET)
-	mkdir -p benchmarks
+benchmark: $(TARGET) | benchmarks
+	@echo "Running benchmark..."
 	hyperfine \
 		--warmup 3 \
 		--show-output \
-		--export-markdown benchmarks/benchmark_results.md \
-        './out/mpt_nn sequential 10000 784 128 10 10 0.01' \
-        './out/mpt_nn parallel 10000 784 128 10 10 0.01' \
-        './out/mpt_nn simd 10000 784 128 10 10 0.01'
+		--export-markdown $(BENCHMARK_RESULT) \
+		'./out/mpt_nn sequential 10000 784 128 10 10 0.01' \
+		'./out/mpt_nn parallel 10000 784 128 10 10 0.01' \
+		'./out/mpt_nn simd 10000 784 128 10 10 0.01'
+
+# Plot generation target
+plot: $(BENCHMARK_RESULT)
+	@echo "Running R script to generate the plot..."
+	Rscript $(PLOT_SCRIPT)
+
+# Ensure the benchmark has been run before plotting
+$(BENCHMARK_RESULT):
+	@echo "Benchmark results not found, running make benchmark..."
+	make benchmark
 
 # Cleanup
 clean:
-	rm -Rf $(OUT_DIR) build *.results $(LOG_DIR) documentation doxygen
+	rm -Rf $(OUT_DIR) build *.results $(LOG_DIR) documentation doxygen benchmarks $(PLOT_OUTPUT)
 
 -include $(DEPS)
+
