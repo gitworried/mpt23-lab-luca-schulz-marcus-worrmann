@@ -9,6 +9,7 @@ Dieses Projekt implementiert ein einfaches neuronales Netzwerk zur Klassifikatio
    - GCC-Compiler mit OpenMP-Unterstützung
    - GNU Make
    - MNIST-Datensatz (`train-images.idx3-ubyte` und `train-labels.idx1-ubyte`) im Projektverzeichnis
+   - R mit zusätzlichen Bibliotheken
 
 2. **Projekt kompilieren:**
 
@@ -89,6 +90,35 @@ make benchmark
 
 erstellen.
 
+## R
+
+Für die Visualisierung der Benchmark-Ergebnisse wurde das Programm R genutzt. Dieses kann über folgende Kommandozeile installiert werden:
+
+```bash
+sudo apt-get install r-base
+```
+
+Anschließend müssen nachfolgende Bibliotheken in R installiert werden. Öffnen Sie dafür eine R-Instanz durch den Befehl:
+
+```bash
+R
+```
+
+In der R-Konsole können die notwendigen Bibliotheken mit dem folgenden Code installiert werden:
+
+```bash
+install.packages(c("ggplot2", "dplyr", "tidyr", "readr"))
+```
+
+Abschließend kann das Skript zur Visualisierung der Benchmark-Ergebnisse mit dem Befehl:
+
+```bash
+make plot
+```
+
+ausgeführt werden. Die Ergebnisse können im hinterlegten Benchmark-Ordner eingesehen werden.
+
+
 ## Dokumentation
 
 Zurzeit ist es leider nur via Doxygen möglich detaillierte Auskunft über die funktionen des mpt_nn zu erhalten.<br>
@@ -109,7 +139,7 @@ Um eine PDF zu generieren.
 ## TODO
 
 - [x] Doxygen Doku<br>
-- [ ] Benchmark Visualisierung (Mit python script oder R?) <br>
+- [x] Benchmark Visualisierung (Mit python script oder R?) <br>
 - [ ] Villeicht: Default Parameter zum starten des mpt_nn (z.B angepasst an den MNIST-Datensatz, also 60000 trainingsdaten, 784 eingangsneuronen... etc)<br>
 - [ ] Code optimieren(Benchmarks) Zurzeit kommen komische Benchmark Ergebnisse raus. Sequentielles ausführen ist in den meisten Fällen deutlich schneller als parallel und SIMD. Das kann natürlich sein, aber ist eher unwahrscheinlich. (Programm auf mehreren Maschinen testen).<br>
 - [ ] Code optimieren(helgrind, valgrind): helgrind zeigt noch etliche potentielle race conditions an.<br>
