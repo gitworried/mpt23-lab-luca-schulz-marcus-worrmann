@@ -45,7 +45,7 @@ void forward_pass_parallel(double inputs[], double hiddenLayer[], double outputL
                            double **hiddenWeights, double **outputWeights,
                            int numInputs, int numHiddenNodes, int numOutputs)
 {
-#pragma omp parallel for schedule(dynamic)
+#pragma omp parallel for schedule(static)
     for (int i = 0; i < numHiddenNodes; i++)
     {
         double activation = hiddenLayerBias[i];
@@ -56,7 +56,7 @@ void forward_pass_parallel(double inputs[], double hiddenLayer[], double outputL
         hiddenLayer[i] = sigmoid(activation);
     }
 
-#pragma omp parallel for schedule(dynamic)
+#pragma omp parallel for schedule(static)
     for (int i = 0; i < numOutputs; i++)
     {
         double activation = outputLayerBias[i];
@@ -73,7 +73,7 @@ void forward_pass_simd(double inputs[], double hiddenLayer[], double outputLayer
                        double **hiddenWeights, double **outputWeights,
                        int numInputs, int numHiddenNodes, int numOutputs)
 {
-#pragma omp parallel for simd schedule(dynamic)
+#pragma omp parallel for simd schedule(static)
     for (int i = 0; i < numHiddenNodes; i++)
     {
         double activation = hiddenLayerBias[i];
@@ -85,7 +85,7 @@ void forward_pass_simd(double inputs[], double hiddenLayer[], double outputLayer
         hiddenLayer[i] = sigmoid(activation);
     }
 
-#pragma omp parallel for simd schedule(dynamic)
+#pragma omp parallel for simd schedule(static)
     for (int i = 0; i < numOutputs; i++)
     {
         double activation = outputLayerBias[i];
@@ -149,14 +149,14 @@ void backpropagation_parallel(double inputs[], double target[], double hiddenLay
     double deltaOutput[numOutputs];
     double deltaHidden[numHiddenNodes];
 
-#pragma omp parallel for schedule(dynamic)
+#pragma omp parallel for schedule(static)
     for (int i = 0; i < numOutputs; i++)
     {
         double error = target[i] - outputLayer[i];
         deltaOutput[i] = error * dSigmoid(outputLayer[i]);
     }
 
-#pragma omp parallel for schedule(dynamic)
+#pragma omp parallel for schedule(static)
     for (int i = 0; i < numHiddenNodes; i++)
     {
         double error = 0.0;
@@ -167,7 +167,7 @@ void backpropagation_parallel(double inputs[], double target[], double hiddenLay
         deltaHidden[i] = error * dSigmoid(hiddenLayer[i]);
     }
 
-#pragma omp parallel for schedule(dynamic)
+#pragma omp parallel for schedule(static)
     for (int i = 0; i < numHiddenNodes; i++)
     {
         for (int j = 0; j < numOutputs; j++)
@@ -179,13 +179,13 @@ void backpropagation_parallel(double inputs[], double target[], double hiddenLay
         }
     }
 
-#pragma omp parallel for schedule(dynamic)
+#pragma omp parallel for schedule(static)
     for (int i = 0; i < numOutputs; i++)
     {
         outputLayerBias[i] += deltaOutput[i] * lr;
     }
 
-#pragma omp parallel for schedule(dynamic)
+#pragma omp parallel for schedule(static)
     for (int i = 0; i < numInputs; i++)
     {
         for (int j = 0; j < numHiddenNodes; j++)
@@ -197,7 +197,7 @@ void backpropagation_parallel(double inputs[], double target[], double hiddenLay
         }
     }
 
-#pragma omp parallel for schedule(dynamic)
+#pragma omp parallel for schedule(static)
     for (int i = 0; i < numHiddenNodes; i++)
     {
         hiddenLayerBias[i] += deltaHidden[i] * lr;
@@ -212,14 +212,14 @@ void backpropagation_simd(double inputs[], double target[], double hiddenLayer[]
     double deltaOutput[numOutputs];
     double deltaHidden[numHiddenNodes];
 
-#pragma omp parallel for simd schedule(dynamic)
+#pragma omp parallel for simd schedule(static)
     for (int i = 0; i < numOutputs; i++)
     {
         double error = target[i] - outputLayer[i];
         deltaOutput[i] = error * dSigmoid(outputLayer[i]);
     }
 
-#pragma omp parallel for simd schedule(dynamic)
+#pragma omp parallel for simd schedule(static)
     for (int i = 0; i < numHiddenNodes; i++)
     {
         double error = 0.0;
@@ -231,7 +231,7 @@ void backpropagation_simd(double inputs[], double target[], double hiddenLayer[]
         deltaHidden[i] = error * dSigmoid(hiddenLayer[i]);
     }
 
-#pragma omp parallel for simd schedule(dynamic)
+#pragma omp parallel for simd schedule(static)
     for (int i = 0; i < numHiddenNodes; i++)
     {
 #pragma omp simd
@@ -242,13 +242,13 @@ void backpropagation_simd(double inputs[], double target[], double hiddenLayer[]
         }
     }
 
-#pragma omp parallel for simd schedule(dynamic)
+#pragma omp parallel for simd schedule(static)
     for (int i = 0; i < numOutputs; i++)
     {
         outputLayerBias[i] += deltaOutput[i] * lr;
     }
 
-#pragma omp parallel for simd schedule(dynamic)
+#pragma omp parallel for simd schedule(static)
     for (int i = 0; i < numInputs; i++)
     {
 #pragma omp simd
@@ -259,7 +259,7 @@ void backpropagation_simd(double inputs[], double target[], double hiddenLayer[]
         }
     }
 
-#pragma omp parallel for simd schedule(dynamic)
+#pragma omp parallel for simd schedule(static)
     for (int i = 0; i < numHiddenNodes; i++)
     {
         hiddenLayerBias[i] += deltaHidden[i] * lr;

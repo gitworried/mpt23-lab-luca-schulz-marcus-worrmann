@@ -97,7 +97,7 @@ valgrind: $(TEST_TARGET) $(LOG_DIR)
 benchmark: $(TARGET) | benchmarks
 	@echo "Running benchmark..."
 	hyperfine \
-		--warmup 0 \
+		--warmup 0\
 		--show-output \
 		--export-markdown $(BENCHMARK_RESULT) \
 		'./out/mpt_nn sequential 10000 784 128 10 10 0.01' \
