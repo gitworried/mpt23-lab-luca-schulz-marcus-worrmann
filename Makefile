@@ -9,7 +9,7 @@ PLOT_OUTPUT=benchmarks/benchmark_plot.png
 
 # Flags and options
 OPTIMIZE=-O3
-CPPFLAGS=-ggdb $(OPTIMIZE) -Wall -Werror -MMD -MP -fopenmp -I.
+CPPFLAGS=-ggdb -O3 -march=native -Wall -Werror -MMD -MP -fopenmp -I. -lm
 CFLAGS=-Wmissing-prototypes
 LDFLAGS=-fopenmp
 LDLIBS=-lm
@@ -97,14 +97,14 @@ valgrind: $(TEST_TARGET) $(LOG_DIR)
 benchmark: $(TARGET) | benchmarks
 	@echo "Running benchmark..."
 	hyperfine \
-		--warmup 3 \
+		--warmup 0 \
 		--show-output \
 		--export-markdown $(BENCHMARK_RESULT) \
 		'./out/mpt_nn sequential 10000 784 128 10 10 0.01' \
 		'./out/mpt_nn parallel 10000 784 128 10 10 0.01' \
 		'./out/mpt_nn simd 10000 784 128 10 10 0.01'
 
-# Plot generation target
+# Plot generation target	
 plot: $(BENCHMARK_RESULT)
 	@echo "Running R script to generate the plot..."
 	Rscript $(PLOT_SCRIPT)

@@ -14,7 +14,6 @@
 
 #ifndef MPT_NN_H
 #define MPT_NN_H
-
 /**
  * @brief Defines the sigmoid activation function.
  *
