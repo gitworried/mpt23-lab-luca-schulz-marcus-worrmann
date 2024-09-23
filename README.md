@@ -21,29 +21,39 @@ make
 
 3. **Starten des Programmes:**
 
-Wenn das Netzwerk erfolgreich gebaut wurde, kann es einfach über die Kommandozeile gestartet werden.
+Wenn das Netzwerk erfolgreich gebaut wurde, kann es einfach über verschiedene Kommandozeilenoptionen konfiguriert und gestartet werden.
 
 ```bash
-./out/mpt_nn <-v> <modus> <numTrainingSets> <numInputs> <numHiddenNodes> <numOutputs> <epochs> <learningRate>
+./out/mpt_nn -v -m<modus> -t<numTrainingSets> -i<numInputs> -h<numHiddenNodes> -o<numOutputs> -e<epochs> -l<learningRate> -d<dropoutRate>
 ```
 
 ### Parameter
 
 Die Parameter sind wie folgt definiert:
 
-- `<-v>` : Aktivierung der visualisierung während des Trainings mit dem MNIST-Datensatz
-- `<modus>`: Ausführungsmodus (`sequential`, `parallel`, `simd`)
-- `<numTrainingSets>`: Anzahl der Trainingsdaten (z.B. 60000 für den gesamten MNIST-Datensatz)
-- `<numInputs>`: Anzahl der Eingangsneuronen (784 für MNIST)
-- `<numHiddenNodes>`: Anzahl der Neuronen in der versteckten Schicht (z.B. 128)
-- `<numOutputs>`: Anzahl der Ausgangsneuronen (z.B. 10 für die 10 Ziffern)
-- `<epochs>`: Anzahl der Epochen für das Training
-- `<learningRate>`: Lernrate (z.B. 0.01)
+- `-D` : Startet das Netzwerk mit vordefinierten default parametern
+- `-d` : Droput Rate (Setzt zufällige neuronen auf 0 während forward pass und backpropagation, z.b 0.1 für 10% droput Rate)
+- `-v` : Aktivierung der visualisierung während des Trainings mit dem MNIST-Datensatz
+- `-m <modus>`: Ausführungsmodus (`sequential`, `parallel`, `simd`)
+- `-t <numTrainingSets>`: Anzahl der Trainingsdaten (z.B. 60000 für den gesamten MNIST-Datensatz)
+- `-i <numInputs>`: Anzahl der Eingangsneuronen (784 für MNIST)
+- `-h <numHiddenNodes>`: Anzahl der Neuronen in der versteckten Schicht (z.B. 128)
+- `-o <numOutputs>`: Anzahl der Ausgangsneuronen (z.B. 10 für die 10 Ziffern)
+- `-e <epochs>`: Anzahl der Epochen für das Training
+- `-l <learningRate>`: Lernrate (z.B. 0.01)
+- `-n <numThreads>` : Setzt die Anzahl an verwendetend Threads fest, die beim ausführen eine Parallelregion benutzt werden
+- `-? <--help>` : Zeigt die verfügbaren Kommandozeilenoptionen
+
+**INFO:** Beim wälen der Dropout Rate ist es wichtig die Größe des Netzwerkes in Betracht zu ziehen.
+Obwohl eine Dropout Rate in der Regel zu natürlicheren Ergebnissen führen kann ist es wahrscheinlich, dass eine zu hohe
+Dropout Rate bei einem kleinen Netzwerk eher für schlechtere Ergebnisse sorgen wird. <br>
+**Empfehlung:** Nach testen mit ca. 128 - 256 hidden nodes ist eine Dropout Rate zwischen 0.0 und 0.2 zu empfehlen.
+Ab 256 hidden nodes ist es auch möglich höher zu gehen, allerdings ist ein wert von mehr als 0.4 -0.5 nicht empfehlenswert.
 
 ### Beispiel
 
 ```bash
-./out/mpt_nn simd 60000 784 10 10 10 0.1
+./out/mpt_nn -m2 -t60000 -i784 -h128 -o10 -e10 -l0.1 -d0.1
 ```
 
 Startet das Training mit dem MNIST-Datensatz mit:
@@ -54,6 +64,7 @@ Startet das Training mit dem MNIST-Datensatz mit:
 - 10 Outputs
 - 10 epochen
 - Einer Lernrate von 0.1
+- Einer Dropout Rate von 10%(0.1)
 
 ## Unit Tests
 

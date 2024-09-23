@@ -43,37 +43,63 @@ df$Command <- factor(df$Command, levels = c("sequential", "parallel", "simd"))
 print("Data in wide format for plotting:")
 print(df)
 
-# At this point it's possible to adjust the coloring for each column separatly by using the specific HEX-code.
+# At this point it's possible to adjust the coloring for each column separately by using the specific HEX-code.
 mean_color <- "#040403"  
 min_color <- "#8EB897"   
 max_color <- "#5B7553"   
 
-# Function to plot the benchmark results as columns. Setting location, size and coloring of each individual result.
+# Extract system information
+cpu_info <- system("lscpu | grep 'Model name' | awk -F: '{print $2}'", intern = TRUE)
+cpu_cores <- system("lscpu | grep '^CPU(s):' | awk -F: '{print $2}'", intern = TRUE)
+cpu_threads <- system("lscpu | grep 'Thread(s) per core' | awk -F: '{print $2}'", intern = TRUE)
+cpu_speed <- system("lscpu | grep 'MHz' | awk -F: '{print $2}'", intern = TRUE)
+gpu_info <- system("lspci | grep -i 'vga\\|3d\\|2d'", intern = TRUE)
+ram_info <- system("free -h | grep 'Mem:' | awk '{print $2}'", intern = TRUE)
+
+# Format the information
+cpu_info <- trimws(cpu_info)
+cpu_cores <- trimws(cpu_cores)
+cpu_threads <- trimws(cpu_threads)
+cpu_speed <- trimws(cpu_speed)
+gpu_info <- trimws(gpu_info)
+ram_info <- trimws(ram_info)
+
+# Create a formatted string for display
+system_info <- paste0("CPU: ", cpu_info, "\n",
+                      "Cores: ", cpu_cores, ", Threads: ", cpu_threads, ", Speed: ", cpu_speed, " MHz\n",
+                      "GPU: ", gpu_info, "\n",
+                      "RAM: ", ram_info)
+
+# Create the plot and add system information in the caption
 p <- ggplot(df, aes(x = Command)) +
   geom_bar(aes(y = Mean_s, fill = "Mean"), stat = "identity", alpha = 0.8, width = 0.6) +
   geom_bar(aes(y = Min_s, fill = "Min"), stat = "identity", alpha = 0.9, width = 0.05, position = position_nudge(x = 0.375)) +
   geom_bar(aes(y = Max_s, fill = "Max"), stat = "identity", alpha = 0.9, width = 0.05, position = position_nudge(x = 0.325)) +
-  
-# Settings for the implemenation of the legend. Setting the colors to represent the correct column and the correct order.
+
+  # Settings for the legend
   scale_fill_manual(
-    name = "Legend",  
+    name = "Legend",
     values = c("Mean" = mean_color, "Min" = min_color, "Max" = max_color),
-    labels = c("Mean" = "Mean", "Min" = "Min", "Max" = "Max")  
+    labels = c("Mean" = "Mean", "Min" = "Min", "Max" = "Max")
   ) +
-  labs(title = "Benchmark Results", y = "Execution Time (s)") +
+  labs(
+    title = "Benchmark Results",
+    y = "Execution Time (s)",
+    caption = paste0("System Information:\n", system_info)
+  ) +
   theme_minimal() +
   theme(
-    plot.title = element_text(hjust = 0.5),      
-    axis.title.x = element_blank(),              
-    axis.text.x = element_text(angle = 45, hjust = 1),  
-    panel.background = element_rect(fill = "white", color = "white"),  
-    plot.background = element_rect(fill = "white", color = "white"),   
-    legend.position = "right",   
-    legend.title = element_text(face = "bold"),  
-    legend.text = element_text(size = 10)  
+    plot.title = element_text(hjust = 0.5),
+    axis.title.x = element_blank(),
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    panel.background = element_rect(fill = "white", color = "white"),
+    plot.background = element_rect(fill = "white", color = "white"),
+    legend.position = "right",
+    legend.title = element_text(face = "bold"),
+    legend.text = element_text(size = 10),
+    plot.caption = element_text(hjust = 0, face = "italic", size = 8)  # Adjust caption formatting
   )
 
-# Save the results as a .png and inform the user of it's success.
+# Save the plot as .png
 ggsave("benchmarks/benchmark_plot.png", plot = p, width = 8, height = 6)
-print("Plot saved successfully.")
-
+print("Plot saved successfully with system information.")

@@ -14,6 +14,12 @@
 
 #ifndef MPT_NN_H
 #define MPT_NN_H
+
+#include <omp.h>
+#include <stdlib.h>
+#include <math.h>
+#include "mpt_nn.h"
+#include "mpt_nn_utility.h"
 /**
  * @brief Defines the sigmoid activation function.
  *
@@ -51,11 +57,12 @@ double dSigmoid(double x);
  * @param numInputs Number of input nodes.
  * @param numHiddenNodes Number of hidden layer nodes.
  * @param numOutputs Number of output nodes.
+ * @param dropout_rate Dropout rate for random neuron dropouts.
  */
 void forward_pass_sequential(double inputs[], double hiddenLayer[], double outputLayer[],
                              double hiddenLayerBias[], double outputLayerBias[],
                              double **hiddenWeights, double **outputWeights,
-                             int numInputs, int numHiddenNodes, int numOutputs);
+                             int numInputs, int numHiddenNodes, int numOutputs, double dropout_rate);
 
 /**
  * @brief Performs a forward pass through the neural network using OpenMP for parallelization.
@@ -73,11 +80,12 @@ void forward_pass_sequential(double inputs[], double hiddenLayer[], double outpu
  * @param numInputs Number of input nodes.
  * @param numHiddenNodes Number of hidden layer nodes.
  * @param numOutputs Number of output nodes.
+ * @param dropout_rate Dropout rate for random neuron dropouts.
  */
 void forward_pass_parallel(double inputs[], double hiddenLayer[], double outputLayer[],
                            double hiddenLayerBias[], double outputLayerBias[],
                            double **hiddenWeights, double **outputWeights,
-                           int numInputs, int numHiddenNodes, int numOutputs);
+                           int numInputs, int numHiddenNodes, int numOutputs, double dropout_rate);
 
 /**
  * @brief Performs a forward pass through the neural network using SIMD and OpenMP.
@@ -95,11 +103,12 @@ void forward_pass_parallel(double inputs[], double hiddenLayer[], double outputL
  * @param numInputs Number of input nodes.
  * @param numHiddenNodes Number of hidden layer nodes.
  * @param numOutputs Number of output nodes.
+ * @param dropout_rate Dropout rate for random neuron dropouts.
  */
 void forward_pass_simd(double inputs[], double hiddenLayer[], double outputLayer[],
                        double hiddenLayerBias[], double outputLayerBias[],
                        double **hiddenWeights, double **outputWeights,
-                       int numInputs, int numHiddenNodes, int numOutputs);
+                       int numInputs, int numHiddenNodes, int numOutputs, double dropout_rate);
 
 /**
  * @brief Performs a backpropagation through the neural network sequentially.
@@ -122,11 +131,12 @@ void forward_pass_simd(double inputs[], double hiddenLayer[], double outputLayer
  * @param numInputs Number of input nodes.
  * @param numHiddenNodes Number of nodes in the hidden layer.
  * @param numOutputs Number of output nodes.
+ * @param dropout_rate Dropout rate for random neuron dropouts.
  */
 void backpropagation_sequential(double inputs[], double target[], double hiddenLayer[], double outputLayer[],
                                 double hiddenLayerBias[], double outputLayerBias[],
                                 double **hiddenWeights, double **outputWeights,
-                                double lr, int numInputs, int numHiddenNodes, int numOutputs);
+                                double lr, int numInputs, int numHiddenNodes, int numOutputs, double dropout_rate);
 
 /**
  * @brief Performs a backpropagation through the neural network using OpenMP for parallelization.
@@ -147,11 +157,12 @@ void backpropagation_sequential(double inputs[], double target[], double hiddenL
  * @param numInputs Number of input nodes.
  * @param numHiddenNodes Number of nodes in the hidden layer.
  * @param numOutputs Number of output nodes.
+ * @param dropout_rate Dropout rate for random neuron dropouts.
  */
 void backpropagation_parallel(double inputs[], double target[], double hiddenLayer[], double outputLayer[],
                               double hiddenLayerBias[], double outputLayerBias[],
                               double **hiddenWeights, double **outputWeights,
-                              double lr, int numInputs, int numHiddenNodes, int numOutputs);
+                              double lr, int numInputs, int numHiddenNodes, int numOutputs, double dropout_rate);
 
 /**
  * @brief Performs a backward pass (backpropagation) through the neural network using SIMD and OpenMP.
@@ -174,10 +185,11 @@ void backpropagation_parallel(double inputs[], double target[], double hiddenLay
  * @param numInputs Number of input nodes.
  * @param numHiddenNodes Number of nodes in the hidden layer.
  * @param numOutputs Number of output nodes.
+ * @param dropout_rate Dropout rate for random neuron dropouts.
  */
 void backpropagation_simd(double inputs[], double target[], double hiddenLayer[], double outputLayer[],
                           double hiddenLayerBias[], double outputLayerBias[],
                           double **hiddenWeights, double **outputWeights,
-                          double lr, int numInputs, int numHiddenNodes, int numOutputs);
+                          double lr, int numInputs, int numHiddenNodes, int numOutputs, double dropout_rate);
 
 #endif // MPT_NN_H

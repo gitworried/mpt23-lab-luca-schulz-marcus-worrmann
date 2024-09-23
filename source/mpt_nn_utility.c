@@ -68,53 +68,6 @@ void initialize_bias(double bias[], int size)
     }
 }
 
-void save_weights_and_biases(double **hiddenWeights, double **outputWeights,
-                             double hiddenLayerBias[], double outputLayerBias[],
-                             int numInputs, int numHiddenNodes, int numOutputs)
-{
-    FILE *file = fopen("weights_biases.txt", "w");
-
-    if (file == NULL)
-    {
-        printf("Error opening file to save weights and biases.\n");
-        return;
-    }
-
-    fprintf(file, "Hidden Weights:\n");
-    for (int i = 0; i < numInputs; i++)
-    {
-        for (int j = 0; j < numHiddenNodes; j++)
-        {
-            fprintf(file, "%f ", hiddenWeights[i][j]);
-        }
-        fprintf(file, "\n");
-    }
-
-    fprintf(file, "\nOutput Weights:\n");
-    for (int i = 0; i < numHiddenNodes; i++)
-    {
-        for (int j = 0; j < numOutputs; j++)
-        {
-            fprintf(file, "%f ", outputWeights[i][j]);
-        }
-        fprintf(file, "\n");
-    }
-
-    fprintf(file, "\nHidden Layer Biases:\n");
-    for (int i = 0; i < numHiddenNodes; i++)
-    {
-        fprintf(file, "%f ", hiddenLayerBias[i]);
-    }
-
-    fprintf(file, "\nOutput Layer Biases:\n");
-    for (int i = 0; i < numOutputs; i++)
-    {
-        fprintf(file, "%f ", outputLayerBias[i]);
-    }
-
-    fclose(file);
-}
-
 void visualize_mnist_digit(double *input, int numInputs)
 {
     for (int i = 0; i < numInputs; i++)
@@ -137,4 +90,37 @@ void visualize_mnist_digit(double *input, int numInputs)
         }
     }
     printf("\n\n");
+}
+
+void print_options(void)
+{
+    printf("Available options:\n");
+    printf("  -d, --dropOut     <dropOutRate>        Set the droput rate [Between 0.0 - 1.0]\n");
+    printf("  -D, --defaultParams                    Set default paramaters for training\n");
+    printf("  -e, --epochs      <numEpochs>          Set the number of epochs for training\n");
+    printf("  -h, --hidden      <numHiddenNodes>     Set the number of hidden nodes\n");
+    printf("  -i, --inputs      <numInputs>          Set the number of input nodes [784 for MNIST]\n");
+    printf("  -l, --learning    <learningRate>       Set the learning rate [Between 0.0 - 1.0]\n");
+    printf("  -m, --mode        <mode>               Set the mode [1: sequential][2: parallel][3: simd]\n");
+    printf("  -n, --numThreads  <numThreads>         Set the number of threads to be used while executing a parallel region\n");
+    printf("  -o, --outputs     <numOutput>          Set the number of output nodes\n");
+    printf("  -t, --trainsets   <numTrainingSets>    Set the number of training sets\n");
+    printf("  -v, --visualize                        Enable visualization\n");
+    printf("  --help                                 Display this help and exit\n");
+}
+
+void apply_dropout(double *layer, int size, double dropout_rate)
+{
+    for (int i = 0; i < size; i++)
+    {
+        double random_val = (double)rand() / RAND_MAX;
+        if (random_val < dropout_rate)
+        {
+            layer[i] = 0;
+        }
+        else
+        {
+            layer[i] *= 1.0 / (1.0 - dropout_rate);
+        }
+    }
 }

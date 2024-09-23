@@ -16,6 +16,7 @@
 #include <immintrin.h>
 #include "mpt_nn.h"
 #include "mpt_nn_utility.h"
+#include "math.h"
 
 /**
  * @brief Allocates memory for a 2D array (weights matrix).
@@ -59,8 +60,6 @@ static double **allocate_weights(int rows, int cols)
  *
  * @param weights Pointer to the 2D array to be freed.
  * @param rows Number of rows.
- *
- *
  */
 static void free_weights(double **weights, int rows)
 {
@@ -75,7 +74,7 @@ static void free_weights(double **weights, int rows)
  * @brief Tests the sigmoid function.
  *
  * Tests the sigmoid function with known input values and asserts the correctness of the output.
- * E.g sigmoid of 0 should be 0.5
+ * E.g., sigmoid of 0 should be 0.5
  */
 static void test_sigmoid()
 {
@@ -90,8 +89,8 @@ static void test_sigmoid()
  *
  * Verifies that the initialize_weights function correctly initializes the weights to small random values in an expected range.
  *
- * Initializes a small matrix and checks, if all values are initialized to non zero small values.
- * Asserts the correct allocation of the matrix
+ * Initializes a small matrix and checks if all values are initialized to non-zero small values.
+ * Asserts the correct allocation of the matrix.
  */
 static void test_initialize_weights()
 {
@@ -117,11 +116,10 @@ static void test_initialize_weights()
  *
  * Checks that the forward_pass_sequential function correctly computes the output of the mpt_nn neural network.
  *
- * Initializes values for input, hidden layer etc....
- * allocates memory for weigths.
+ * Initializes values for input, hidden layer, etc.
+ * Allocates memory for weights.
  * Calls forward_pass_sequential.
- * Asserts that the output layer containes the correct values in a specific range.
- *
+ * Asserts that the output layer contains the correct values in a specific range.
  */
 static void test_forward_pass()
 {
@@ -142,7 +140,9 @@ static void test_forward_pass()
     outputWeights[0][0] = 0.5;
     outputWeights[1][0] = 0.6;
 
-    forward_pass_sequential(inputs, hiddenLayer, outputLayer, hiddenLayerBias, outputLayerBias, hiddenWeights, outputWeights, numInputs, numHiddenNodes, numOutputs);
+    double dropout_rate = 0.0; // No dropout for this test
+
+    forward_pass_sequential(inputs, hiddenLayer, outputLayer, hiddenLayerBias, outputLayerBias, hiddenWeights, outputWeights, numInputs, numHiddenNodes, numOutputs, dropout_rate);
 
     assert(outputLayer[0] > 0 && outputLayer[0] < 1);
     free_weights(hiddenWeights, numInputs);
@@ -154,12 +154,12 @@ static void test_forward_pass()
 /**
  * @brief Tests the forward_pass_parallel function.
  *
- * Cecks that the forward_pass_parallel function correctly computes the output of the mpt_nn neural network in parallel.
+ * Checks that the forward_pass_parallel function correctly computes the output of the mpt_nn neural network in parallel.
  *
- * Initializes values for input, hidden layer etc....
- * allocates memory for weigths.
+ * Initializes values for input, hidden layer, etc.
+ * Allocates memory for weights.
  * Calls forward_pass_parallel.
- * Asserts that the output layer containes the correct values in a specific range.
+ * Asserts that the output layer contains the correct values in a specific range.
  */
 static void test_forward_pass_parallel()
 {
@@ -180,7 +180,9 @@ static void test_forward_pass_parallel()
     outputWeights[0][0] = 0.5;
     outputWeights[1][0] = 0.6;
 
-    forward_pass_parallel(inputs, hiddenLayer, outputLayer, hiddenLayerBias, outputLayerBias, hiddenWeights, outputWeights, numInputs, numHiddenNodes, numOutputs);
+    double dropout_rate = 0.0; // No dropout for this test
+
+    forward_pass_parallel(inputs, hiddenLayer, outputLayer, hiddenLayerBias, outputLayerBias, hiddenWeights, outputWeights, numInputs, numHiddenNodes, numOutputs, dropout_rate);
 
     assert(outputLayer[0] > 0 && outputLayer[0] < 1);
 
@@ -195,11 +197,10 @@ static void test_forward_pass_parallel()
  *
  * Checks that the forward_pass_simd function correctly computes the output of the mpt_nn neural network using SIMD.
  *
- * Initializes values for input, hidden layer etc....
- * allocates memory for weigths.
+ * Initializes values for input, hidden layer, etc.
+ * Allocates memory for weights.
  * Calls forward_pass_simd.
- * Asserts that the output layer containes the correct values in a specific range.
- *
+ * Asserts that the output layer contains the correct values in a specific range.
  */
 static void test_forward_pass_simd()
 {
@@ -220,7 +221,9 @@ static void test_forward_pass_simd()
     outputWeights[0][0] = 0.5;
     outputWeights[1][0] = 0.6;
 
-    forward_pass_simd(inputs, hiddenLayer, outputLayer, hiddenLayerBias, outputLayerBias, hiddenWeights, outputWeights, numInputs, numHiddenNodes, numOutputs);
+    double dropout_rate = 0.0;
+
+    forward_pass_simd(inputs, hiddenLayer, outputLayer, hiddenLayerBias, outputLayerBias, hiddenWeights, outputWeights, numInputs, numHiddenNodes, numOutputs, dropout_rate);
 
     assert(outputLayer[0] > 0 && outputLayer[0] < 1);
 
@@ -235,11 +238,10 @@ static void test_forward_pass_simd()
  *
  * Checks that the backpropagation_sequential function correctly updates the weights and biases of the mpt_nn neural network.
  *
- * Initializes values for input, hidden layer etc....
- * allocates memory for weigths.
- * Calls forward_pass_sequential and baclpropagation_sequential.
- * Asserts that the weigths and biases are updated correctly
- *
+ * Initializes values for input, hidden layer, etc.
+ * Allocates memory for weights.
+ * Calls forward_pass_sequential and backpropagation_sequential.
+ * Asserts that the weights and biases are updated correctly.
  */
 static void test_backpropagation()
 {
@@ -261,8 +263,10 @@ static void test_backpropagation()
     outputWeights[0][0] = 0.5;
     outputWeights[1][0] = 0.6;
 
-    forward_pass_sequential(inputs, hiddenLayer, outputLayer, hiddenLayerBias, outputLayerBias, hiddenWeights, outputWeights, numInputs, numHiddenNodes, numOutputs);
-    backpropagation_sequential(inputs, target, hiddenLayer, outputLayer, hiddenLayerBias, outputLayerBias, hiddenWeights, outputWeights, 0.1, numInputs, numHiddenNodes, numOutputs);
+    double dropout_rate = 0.0;
+
+    forward_pass_sequential(inputs, hiddenLayer, outputLayer, hiddenLayerBias, outputLayerBias, hiddenWeights, outputWeights, numInputs, numHiddenNodes, numOutputs, dropout_rate);
+    backpropagation_sequential(inputs, target, hiddenLayer, outputLayer, hiddenLayerBias, outputLayerBias, hiddenWeights, outputWeights, 0.1, numInputs, numHiddenNodes, numOutputs, dropout_rate);
 
     assert(hiddenWeights[0][0] != 0.1);
     assert(outputWeights[0][0] != 0.5);
@@ -278,10 +282,10 @@ static void test_backpropagation()
  *
  * Checks that the backpropagation_parallel function correctly updates the weights and biases of the mpt_nn neural network in parallel.
  *
- * Initializes values for input, hidden layer etc....
- * allocates memory for weigths.
- * Calls forward_pass_parallel and backpasspropagation_parallel.
- * Asserts that the weigths and biases are updated correctly
+ * Initializes values for input, hidden layer, etc.
+ * Allocates memory for weights.
+ * Calls forward_pass_parallel and backpropagation_parallel.
+ * Asserts that the weights and biases are updated correctly.
  */
 static void test_backpropagation_parallel()
 {
@@ -303,8 +307,10 @@ static void test_backpropagation_parallel()
     outputWeights[0][0] = 0.5;
     outputWeights[1][0] = 0.6;
 
-    forward_pass_parallel(inputs, hiddenLayer, outputLayer, hiddenLayerBias, outputLayerBias, hiddenWeights, outputWeights, numInputs, numHiddenNodes, numOutputs);
-    backpropagation_parallel(inputs, target, hiddenLayer, outputLayer, hiddenLayerBias, outputLayerBias, hiddenWeights, outputWeights, 0.1, numInputs, numHiddenNodes, numOutputs);
+    double dropout_rate = 0.0;
+
+    forward_pass_parallel(inputs, hiddenLayer, outputLayer, hiddenLayerBias, outputLayerBias, hiddenWeights, outputWeights, numInputs, numHiddenNodes, numOutputs, dropout_rate);
+    backpropagation_parallel(inputs, target, hiddenLayer, outputLayer, hiddenLayerBias, outputLayerBias, hiddenWeights, outputWeights, 0.1, numInputs, numHiddenNodes, numOutputs, dropout_rate);
 
     assert(hiddenWeights[0][0] != 0.1);
     assert(outputWeights[0][0] != 0.5);
@@ -320,10 +326,10 @@ static void test_backpropagation_parallel()
  *
  * This function checks that the backpropagation_simd function correctly updates the weights and biases of a simple neural network using SIMD.
  *
- * Initializes values for input, hidden layer etc....
- * allocates memory for weigths.
+ * Initializes values for input, hidden layer, etc.
+ * Allocates memory for weights.
  * Calls forward_pass_simd and backpropagation_simd.
- * Asserts that the weigths and biases are updated correctly
+ * Asserts that the weights and biases are updated correctly.
  */
 static void test_backpropagation_simd()
 {
@@ -345,8 +351,10 @@ static void test_backpropagation_simd()
     outputWeights[0][0] = 0.5;
     outputWeights[1][0] = 0.6;
 
-    forward_pass_simd(inputs, hiddenLayer, outputLayer, hiddenLayerBias, outputLayerBias, hiddenWeights, outputWeights, numInputs, numHiddenNodes, numOutputs);
-    backpropagation_simd(inputs, target, hiddenLayer, outputLayer, hiddenLayerBias, outputLayerBias, hiddenWeights, outputWeights, 0.1, numInputs, numHiddenNodes, numOutputs);
+    double dropout_rate = 0.0;
+
+    forward_pass_simd(inputs, hiddenLayer, outputLayer, hiddenLayerBias, outputLayerBias, hiddenWeights, outputWeights, numInputs, numHiddenNodes, numOutputs, dropout_rate);
+    backpropagation_simd(inputs, target, hiddenLayer, outputLayer, hiddenLayerBias, outputLayerBias, hiddenWeights, outputWeights, 0.1, numInputs, numHiddenNodes, numOutputs, dropout_rate);
 
     assert(hiddenWeights[0][0] != 0.1);
     assert(outputWeights[0][0] != 0.5);
@@ -355,6 +363,51 @@ static void test_backpropagation_simd()
     free_weights(outputWeights, numHiddenNodes);
 
     printf("test_backpropagation (SIMD) passed.\n");
+}
+
+/**
+ * @brief Tests the apply_dropout function.
+ *
+ * Verifies that the apply_dropout function correctly applies dropout to a layer of neurons.
+ * This test uses a fixed random seed to ensure deterministic behavior.
+ * It checks that the correct neurons are dropped based on the dropout rate.
+ */
+static void test_apply_dropout()
+{
+    int size = 10;
+    double layer[10];
+    double original_layer[10];
+    double dropout_rate = 0.3;
+
+    for (int i = 0; i < size; i++)
+    {
+        layer[i] = 1.0;
+        original_layer[i] = layer[i];
+    }
+
+    srand(42);
+
+    apply_dropout(layer, size, dropout_rate);
+
+    printf("Layer after applying dropout:\n");
+    for (int i = 0; i < size; i++)
+    {
+        printf("Neuron %d: %.2f\n", i, layer[i]);
+    }
+
+    for (int i = 0; i < size; i++)
+    {
+        if (layer[i] == 0.0)
+        {
+            assert(layer[i] == 0.0);
+        }
+        else
+        {
+            assert(abs(layer[i] - (original_layer[i] * (1.0 / (1.0 - dropout_rate)))) < 1e-6);
+        }
+    }
+
+    printf("test_apply_dropout passed.\n");
 }
 
 /**
@@ -374,6 +427,7 @@ int main()
     test_backpropagation();
     test_backpropagation_parallel();
     test_backpropagation_simd();
+    test_apply_dropout();
     printf("All tests passed.\n");
     return 0;
 }

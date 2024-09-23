@@ -96,13 +96,23 @@ valgrind: $(TEST_TARGET) $(LOG_DIR)
 # Benchmark using hyperfine
 benchmark: $(TARGET) | benchmarks
 	@echo "Running benchmark..."
+	@echo "System Information:" > benchmarks/system_info.txt
+	@echo "===================" >> benchmarks/system_info.txt
+	@echo "OS and Kernel:" >> benchmarks/system_info.txt
+	@uname -a >> benchmarks/system_info.txt
+	@echo "\nCPU Information:" >> benchmarks/system_info.txt
+	@lscpu >> benchmarks/system_info.txt
+	@echo "\nMemory Information:" >> benchmarks/system_info.txt
+	@free -h >> benchmarks/system_info.txt
+	@echo "\nFull system information can be found in benchmarks/system_info.txt"
+	
 	hyperfine \
-		--warmup 0\
+		--warmup 0 \
 		--show-output \
 		--export-markdown $(BENCHMARK_RESULT) \
-		'./out/mpt_nn sequential 10000 784 128 10 10 0.01' \
-		'./out/mpt_nn parallel 10000 784 128 10 10 0.01' \
-		'./out/mpt_nn simd 10000 784 128 10 10 0.01'
+		'./out/mpt_nn sequential -m1 -t10000 -i784 -h128 -o10 -e10 -l0.1 -d0.0' \
+		'./out/mpt_nn parallel -m2 -t10000 -i784 -h128 -o10 -e10 -l0.1 -d0.0' \
+		'./out/mpt_nn simd -m3 -t10000 -i784 -h128 -o10 -e10 -l0.1 -d0.0'
 
 # Plot generation target	
 plot: $(BENCHMARK_RESULT)

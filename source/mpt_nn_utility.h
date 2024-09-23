@@ -56,24 +56,6 @@ void initialize_weights(double **weights, int rows, int cols);
 void initialize_bias(double bias[], int size);
 
 /**
- * @brief Saves the weights and biases of the mpt_nn to a file.
- *
- * This function is not used at the moment.
- * It allows to persist the Parameters of the mpt_nn after training for future use if needed.
- *
- * @param hiddenWeights 2D array containing the weights between the input and hidden layers.
- * @param outputWeights 2D array containing the weights between the hidden and output layers.
- * @param hiddenLayerBias Array containing the biases for the hidden layer.
- * @param outputLayerBias Array containing the biases for the output layer.
- * @param numInputs Number of input nodes.
- * @param numHiddenNodes Number of nodes in the hidden layer.
- * @param numOutputs Number of output nodes.
- */
-void save_weights_and_biases(double **hiddenWeights, double **outputWeights,
-                             double hiddenLayerBias[], double outputLayerBias[],
-                             int numInputs, int numHiddenNodes, int numOutputs);
-
-/**
  * @brief Visualizes an MNIST digit by printing it to the console.
  *
  * Interprets the pixel values as a 28x28 grid.
@@ -86,5 +68,28 @@ void save_weights_and_biases(double **hiddenWeights, double **outputWeights,
  * @param numInputs Number of input nodes (pixels per image).
  */
 void visualize_mnist_digit(double *input, int numInputs);
+
+/**
+ * @brief Prints the awailable command line options to the terminal.
+ *
+ */
+void print_options(void);
+/**
+ * @brief Applys a dropout to a layer of neurons.
+ *
+ * This function randomly drops out (sets to 0) a portion of the neurons in a layer
+ * during training, based on the specified dropout rate. The remaining active neurons
+ * are scaled by a factor of `1 / (1 - dropout_rate)` to maintain the overall output
+ * distribution.
+ * 
+ * INFO: Amount of hidden nodes has to be taken into considaration when choosing the dropout rate.
+ * For example: When having 128 hidden nodes a max. dropout rate should be choosen to achieve optimal results.
+ * anything higher will lead to too many dropouts for such an amount of hidden nodes.
+ *
+ * @param layer Pointer to the array representing the layer's neuron activations.
+ * @param size Number of neurons in the layer.
+ * @param dropout_rate Probability of dropping a neuron (value between 0.0 and 1.0)
+ */
+void apply_dropout(double *layer, int size, double dropout_rate);
 
 #endif // MPT_NN_UTILITY_H

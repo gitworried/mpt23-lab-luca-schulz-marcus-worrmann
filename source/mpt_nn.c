@@ -1,8 +1,4 @@
-#include <omp.h>
-#include <stdlib.h>
 #include "mpt_nn.h"
-#include "mpt_nn_utility.h"
-#include "math.h"
 
 double sigmoid(double x)
 {
@@ -17,7 +13,8 @@ double dSigmoid(double x)
 void forward_pass_sequential(double inputs[], double hiddenLayer[], double outputLayer[],
                              double hiddenLayerBias[], double outputLayerBias[],
                              double **hiddenWeights, double **outputWeights,
-                             int numInputs, int numHiddenNodes, int numOutputs)
+                             int numInputs, int numHiddenNodes, int numOutputs,
+                             double dropout_rate)
 {
     for (int i = 0; i < numHiddenNodes; i++)
     {
@@ -28,6 +25,8 @@ void forward_pass_sequential(double inputs[], double hiddenLayer[], double outpu
         }
         hiddenLayer[i] = sigmoid(activation);
     }
+
+    apply_dropout(hiddenLayer, numHiddenNodes, dropout_rate);
 
     for (int i = 0; i < numOutputs; i++)
     {
@@ -43,7 +42,8 @@ void forward_pass_sequential(double inputs[], double hiddenLayer[], double outpu
 void forward_pass_parallel(double inputs[], double hiddenLayer[], double outputLayer[],
                            double hiddenLayerBias[], double outputLayerBias[],
                            double **hiddenWeights, double **outputWeights,
-                           int numInputs, int numHiddenNodes, int numOutputs)
+                           int numInputs, int numHiddenNodes, int numOutputs,
+                           double dropout_rate)
 {
 #pragma omp parallel for schedule(static)
     for (int i = 0; i < numHiddenNodes; i++)
@@ -55,6 +55,8 @@ void forward_pass_parallel(double inputs[], double hiddenLayer[], double outputL
         }
         hiddenLayer[i] = sigmoid(activation);
     }
+
+    apply_dropout(hiddenLayer, numHiddenNodes, dropout_rate);
 
 #pragma omp parallel for schedule(static)
     for (int i = 0; i < numOutputs; i++)
@@ -71,7 +73,8 @@ void forward_pass_parallel(double inputs[], double hiddenLayer[], double outputL
 void forward_pass_simd(double inputs[], double hiddenLayer[], double outputLayer[],
                        double hiddenLayerBias[], double outputLayerBias[],
                        double **hiddenWeights, double **outputWeights,
-                       int numInputs, int numHiddenNodes, int numOutputs)
+                       int numInputs, int numHiddenNodes, int numOutputs,
+                       double dropout_rate)
 {
 #pragma omp parallel for simd schedule(static)
     for (int i = 0; i < numHiddenNodes; i++)
@@ -84,6 +87,8 @@ void forward_pass_simd(double inputs[], double hiddenLayer[], double outputLayer
         }
         hiddenLayer[i] = sigmoid(activation);
     }
+
+    apply_dropout(hiddenLayer, numHiddenNodes, dropout_rate);
 
 #pragma omp parallel for simd schedule(static)
     for (int i = 0; i < numOutputs; i++)
@@ -101,7 +106,8 @@ void forward_pass_simd(double inputs[], double hiddenLayer[], double outputLayer
 void backpropagation_sequential(double inputs[], double target[], double hiddenLayer[], double outputLayer[],
                                 double hiddenLayerBias[], double outputLayerBias[],
                                 double **hiddenWeights, double **outputWeights,
-                                double lr, int numInputs, int numHiddenNodes, int numOutputs)
+                                double lr, int numInputs, int numHiddenNodes, int numOutputs,
+                                double dropout_rate)
 {
     double deltaOutput[numOutputs];
     double deltaHidden[numHiddenNodes];
@@ -144,7 +150,8 @@ void backpropagation_sequential(double inputs[], double target[], double hiddenL
 void backpropagation_parallel(double inputs[], double target[], double hiddenLayer[], double outputLayer[],
                               double hiddenLayerBias[], double outputLayerBias[],
                               double **hiddenWeights, double **outputWeights,
-                              double lr, int numInputs, int numHiddenNodes, int numOutputs)
+                              double lr, int numInputs, int numHiddenNodes, int numOutputs,
+                              double dropout_rate)
 {
     double deltaOutput[numOutputs];
     double deltaHidden[numHiddenNodes];
@@ -207,7 +214,8 @@ void backpropagation_parallel(double inputs[], double target[], double hiddenLay
 void backpropagation_simd(double inputs[], double target[], double hiddenLayer[], double outputLayer[],
                           double hiddenLayerBias[], double outputLayerBias[],
                           double **hiddenWeights, double **outputWeights,
-                          double lr, int numInputs, int numHiddenNodes, int numOutputs)
+                          double lr, int numInputs, int numHiddenNodes, int numOutputs,
+                          double dropout_rate)
 {
     double deltaOutput[numOutputs];
     double deltaHidden[numHiddenNodes];
