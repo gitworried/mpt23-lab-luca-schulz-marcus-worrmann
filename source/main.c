@@ -19,9 +19,8 @@
 int main(int argc, char *argv[])
 {
     int opt;
-    int visualize = 0;
-    bool dProvided = false;
 
+    int visualize = 0;
     int mode = 1;
     int numTrainingSets = 10000;
     int numInputs = 784;
@@ -30,7 +29,10 @@ int main(int argc, char *argv[])
     int epochs = 10;
     int numThreads = 1;
     double learningRate = 0.01;
-    double droputRate = 0.0;
+    double dropoutRate = 0.0;
+
+    bool nProvided = false;
+    bool dProvided = false;
 
     const char *optstring = "Dd:e:h:i:l:m:n:o:t:v";
 
@@ -38,20 +40,21 @@ int main(int argc, char *argv[])
         {
             {"help", no_argument, NULL, '?'},
             {"defaultParams", no_argument, NULL, 'D'},
-            {"epochs", no_argument, NULL, 'e'},
-            {"hidden", no_argument, NULL, 'h'},
-            {"inputs", no_argument, NULL, 'i'},
-            {"outputs", no_argument, NULL, 'o'},
-            {"mode", no_argument, NULL, 'm'},
-            {"dropOut", no_argument, NULL, 'd'},
-            {"learning", no_argument, NULL, 'l'},
-            {"numThreads", no_argument, NULL, 'n'},
-            {"trainsets", no_argument, NULL, 't'},
-            {"visualize", no_argument, NULL, 'v'}};
+            {"epochs", required_argument, NULL, 'e'},
+            {"hidden", required_argument, NULL, 'h'},
+            {"inputs", required_argument, NULL, 'i'},
+            {"outputs", required_argument, NULL, 'o'},
+            {"mode", required_argument, NULL, 'm'},
+            {"dropOut", required_argument, NULL, 'd'},
+            {"learning", required_argument, NULL, 'l'},
+            {"numThreads", required_argument, NULL, 'n'},
+            {"trainsets", required_argument, NULL, 't'},
+            {"visualize", no_argument, NULL, 'v'},
+            {0, 0, 0, 0}};
 
     while ((opt = getopt_long(argc, argv, optstring, longopt, NULL)) != -1)
     {
-        switch ((opt))
+        switch (opt)
         {
         case 'D':
             mode = 1;
@@ -61,7 +64,7 @@ int main(int argc, char *argv[])
             numOutputs = 10;
             epochs = 10;
             learningRate = 0.01;
-            droputRate = 0.0;
+            dropoutRate = 0.0;
             printf("************************ INFO *************************\n");
             printf("* Training mpt_nn with default parameters             *\n");
             printf("* %-25s %-25s *\n", "Mode[1]:", "sequential");
@@ -71,13 +74,16 @@ int main(int argc, char *argv[])
             printf("* %-25s %-25d *\n", "Output nodes:", numOutputs);
             printf("* %-25s %-25d *\n", "Epochs:", epochs);
             printf("* %-25s %-25.6f *\n", "Learning rate:", learningRate);
-            printf("* %-25s %-25.6f *\n", "Dropout rate:", droputRate);
-            printf("* %-25s %-25d *\n", "Number of Threads:", numThreads);
+            printf("* %-25s %-25.6f *\n", "Dropout rate:", dropoutRate);
+            if (nProvided)
+            {
+                printf("* %-25s %-25d *\n", "Number of Threads:", numThreads);
+            }
             printf("*******************************************************\n");
             dProvided = true;
             break;
         case 'd':
-            droputRate = atof(optarg);
+            dropoutRate = atof(optarg);
             break;
         case 'e':
             epochs = atoi(optarg);
@@ -93,6 +99,8 @@ int main(int argc, char *argv[])
             break;
         case 'n':
             numThreads = atoi(optarg);
+            nProvided = true;
+            break;
         case 'm':
             mode = atoi(optarg);
             break;
@@ -113,6 +121,7 @@ int main(int argc, char *argv[])
             return 1;
         }
     }
+
     if (!dProvided)
     {
         printf("************************ INFO *************************\n");
@@ -130,6 +139,7 @@ int main(int argc, char *argv[])
             printf("* %-25s %-25s *\n", "Mode[3]:", "SIMD");
             break;
         default:
+            printf("* %-25s %-25d *\n", "Mode:", mode);
             break;
         }
 
@@ -139,18 +149,26 @@ int main(int argc, char *argv[])
         printf("* %-25s %-25d *\n", "Output nodes:", numOutputs);
         printf("* %-25s %-25d *\n", "Epochs:", epochs);
         printf("* %-25s %-25.6f *\n", "Learning rate:", learningRate);
-        printf("* %-25s %-25.6f *\n", "Dropout rate:", droputRate);
-        printf("* %-25s %-25d *\n", "Number of Threads:", numThreads);
+        printf("* %-25s %-25.6f *\n", "Dropout rate:", dropoutRate);
+        if (nProvided)
+        {
+            printf("* %-25s %-25d *\n", "Number of Threads:", numThreads);
+        }
         printf("*******************************************************\n");
     }
 
     if (argc <= 1)
     {
-        printf("Missing arguments. Please select -d for default parameters or set them your own with the available options.\n");
-        printf("-? or --help to display all available otpions.\n");
+        printf("Missing arguments. Please select -D for default parameters or set them yourself with the available options.\n");
+        printf("-? or --help to display all available options.\n");
         print_options();
+        return 1;
     }
-    omp_set_num_threads(numThreads);
+
+    if (nProvided)
+    {
+        omp_set_num_threads(numThreads);
+    }
 
     double *hiddenLayer = malloc(numHiddenNodes * sizeof(double));
     double *outputLayer = malloc(numOutputs * sizeof(double));
@@ -161,14 +179,47 @@ int main(int argc, char *argv[])
     double **training_inputs = malloc(numTrainingSets * sizeof(double *));
     double **training_outputs = malloc(numTrainingSets * sizeof(double *));
 
-    for (int i = 0; i < numInputs; i++)
-        hiddenWeights[i] = malloc(numHiddenNodes * sizeof(double));
     for (int i = 0; i < numHiddenNodes; i++)
+        hiddenLayer[i] = 0.0;
+    for (int i = 0; i < numOutputs; i++)
+        outputLayer[i] = 0.0;
+    for (int i = 0; i < numHiddenNodes; i++)
+        hiddenLayerBias[i] = 0.0;
+    for (int i = 0; i < numOutputs; i++)
+        outputLayerBias[i] = 0.0;
+
+    for (int i = 0; i < numInputs; i++)
+    {
+        hiddenWeights[i] = malloc(numHiddenNodes * sizeof(double));
+        for (int j = 0; j < numHiddenNodes; j++)
+        {
+            hiddenWeights[i][j] = 0.0;
+        }
+    }
+    for (int i = 0; i < numHiddenNodes; i++)
+    {
         outputWeights[i] = malloc(numOutputs * sizeof(double));
+        for (int j = 0; j < numOutputs; j++)
+        {
+            outputWeights[i][j] = 0.0;
+        }
+    }
     for (int i = 0; i < numTrainingSets; i++)
+    {
         training_inputs[i] = malloc(numInputs * sizeof(double));
+        for (int j = 0; j < numInputs; j++)
+        {
+            training_inputs[i][j] = 0.0;
+        }
+    }
     for (int i = 0; i < numTrainingSets; i++)
+    {
         training_outputs[i] = malloc(numOutputs * sizeof(double));
+        for (int j = 0; j < numOutputs; j++)
+        {
+            training_outputs[i][j] = 0.0;
+        }
+    }
 
     load_mnist(training_inputs, training_outputs, numTrainingSets, numInputs, numOutputs);
 
@@ -201,15 +252,15 @@ int main(int argc, char *argv[])
 
             if (mode == 1)
             {
-                forward_pass_sequential(training_inputs[i], hiddenLayer, outputLayer, hiddenLayerBias, outputLayerBias, hiddenWeights, outputWeights, numInputs, numHiddenNodes, numOutputs, droputRate);
+                forward_pass_sequential(training_inputs[i], hiddenLayer, outputLayer, hiddenLayerBias, outputLayerBias, hiddenWeights, outputWeights, numInputs, numHiddenNodes, numOutputs, dropoutRate);
             }
             else if (mode == 2)
             {
-                forward_pass_parallel(training_inputs[i], hiddenLayer, outputLayer, hiddenLayerBias, outputLayerBias, hiddenWeights, outputWeights, numInputs, numHiddenNodes, numOutputs, droputRate);
+                forward_pass_parallel(training_inputs[i], hiddenLayer, outputLayer, hiddenLayerBias, outputLayerBias, hiddenWeights, outputWeights, numInputs, numHiddenNodes, numOutputs, dropoutRate);
             }
             else if (mode == 3)
             {
-                forward_pass_simd(training_inputs[i], hiddenLayer, outputLayer, hiddenLayerBias, outputLayerBias, hiddenWeights, outputWeights, numInputs, numHiddenNodes, numOutputs, droputRate);
+                forward_pass_simd(training_inputs[i], hiddenLayer, outputLayer, hiddenLayerBias, outputLayerBias, hiddenWeights, outputWeights, numInputs, numHiddenNodes, numOutputs, dropoutRate);
             }
 
             double loss = 0.0;
@@ -242,15 +293,15 @@ int main(int argc, char *argv[])
 
             if (mode == 1)
             {
-                backpropagation_sequential(training_inputs[i], training_outputs[i], hiddenLayer, outputLayer, hiddenLayerBias, outputLayerBias, hiddenWeights, outputWeights, learningRate, numInputs, numHiddenNodes, numOutputs, droputRate);
+                backpropagation_sequential(training_inputs[i], training_outputs[i], hiddenLayer, outputLayer, hiddenLayerBias, outputLayerBias, hiddenWeights, outputWeights, learningRate, numInputs, numHiddenNodes, numOutputs, dropoutRate);
             }
             else if (mode == 2)
             {
-                backpropagation_parallel(training_inputs[i], training_outputs[i], hiddenLayer, outputLayer, hiddenLayerBias, outputLayerBias, hiddenWeights, outputWeights, learningRate, numInputs, numHiddenNodes, numOutputs, droputRate);
+                backpropagation_parallel(training_inputs[i], training_outputs[i], hiddenLayer, outputLayer, hiddenLayerBias, outputLayerBias, hiddenWeights, outputWeights, learningRate, numInputs, numHiddenNodes, numOutputs, dropoutRate);
             }
             else if (mode == 3)
             {
-                backpropagation_simd(training_inputs[i], training_outputs[i], hiddenLayer, outputLayer, hiddenLayerBias, outputLayerBias, hiddenWeights, outputWeights, learningRate, numInputs, numHiddenNodes, numOutputs, droputRate);
+                backpropagation_simd(training_inputs[i], training_outputs[i], hiddenLayer, outputLayer, hiddenLayerBias, outputLayerBias, hiddenWeights, outputWeights, learningRate, numInputs, numHiddenNodes, numOutputs, dropoutRate);
             }
         }
 

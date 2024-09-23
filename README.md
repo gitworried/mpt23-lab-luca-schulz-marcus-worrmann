@@ -6,6 +6,7 @@ Dieses Projekt implementiert ein einfaches neuronales Netzwerk zur Klassifikatio
 
 1. **Voraussetzungen:**
 
+   - Linux Distribution
    - GCC-Compiler mit OpenMP-Unterstützung
    - GNU Make
    - MNIST-Datensatz (`train-images.idx3-ubyte` und `train-labels.idx1-ubyte`) im Projektverzeichnis
@@ -101,7 +102,7 @@ make benchmark
 
 erstellen.
 
-## R
+## R Plot
 
 Für die Visualisierung der Benchmark-Ergebnisse wurde das Programm R genutzt. Dieses kann über folgende Kommandozeile installiert werden:
 
@@ -150,7 +151,7 @@ Um eine PDF zu generieren.
 
 - [x] Doxygen Doku<br>
 - [x] Benchmark Visualisierung (Mit python script oder R?) <br>
-- [ ] Villeicht: Default Parameter zum starten des mpt_nn (z.B angepasst an den MNIST-Datensatz, also 60000 trainingsdaten, 784 eingangsneuronen... etc)<br>
+- [x] Villeicht: Default Parameter zum starten des mpt_nn (z.B angepasst an den MNIST-Datensatz, also 60000 trainingsdaten, 784 eingangsneuronen... etc)<br>
 - [x] Code optimieren(Benchmarks) Zurzeit kommen komische Benchmark Ergebnisse raus. Sequentielles ausführen ist in den meisten Fällen deutlich schneller als parallel und SIMD. Das kann natürlich sein, aber ist eher unwahrscheinlich. (Programm auf mehreren Maschinen testen).<br>
 - [ ] Code optimieren(helgrind, valgrind): helgrind zeigt noch etliche potentielle race conditions an.<br>
 - [ ] Doku schreiben.<br>

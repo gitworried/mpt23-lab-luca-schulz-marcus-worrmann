@@ -180,7 +180,7 @@ static void test_forward_pass_parallel()
     outputWeights[0][0] = 0.5;
     outputWeights[1][0] = 0.6;
 
-    double dropout_rate = 0.0; // No dropout for this test
+    double dropout_rate = 0.0;
 
     forward_pass_parallel(inputs, hiddenLayer, outputLayer, hiddenLayerBias, outputLayerBias, hiddenWeights, outputWeights, numInputs, numHiddenNodes, numOutputs, dropout_rate);
 

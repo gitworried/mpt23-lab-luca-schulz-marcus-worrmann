@@ -4,7 +4,7 @@ TEST_TARGET=out/mpt_nn_test
 
 # Benchmark output files
 BENCHMARK_RESULT=benchmarks/benchmark_results.md
-PLOT_SCRIPT=source/mpt_nn_plot.R
+PLOT_SCRIPT=scripts/mpt_nn_plot.R
 PLOT_OUTPUT=benchmarks/benchmark_plot.png
 
 # Flags and options
@@ -21,6 +21,8 @@ CC=gcc
 SRC_DIR=source
 OUT_DIR=out
 LOG_DIR=logs
+HELGRIND_DIR=helgrind
+VALGRIND_DIR=valgrind
 
 # The sources that make up the main executable.
 SRCS=$(filter-out %_test.c,$(wildcard $(SRC_DIR)/*.c))
@@ -49,6 +51,14 @@ $(OUT_DIR):
 # Ensure the logs directory exists
 $(LOG_DIR):
 	mkdir -p $(LOG_DIR)
+
+# Ensure helgrind directory exists
+$(LOG_DIR)/$(HELGRIND_DIR):
+	mkdir -p $(LOG_DIR)/$(HELGRIND_DIR)
+
+# Ensure valgrind directory exists
+$(LOG_DIR)/$(VALGRIND_DIR):
+	mkdir -p $(LOG_DIR)/$(VALGRIND_DIR)
 
 # Ensure the benchmarks directory exists
 benchmarks:
@@ -81,16 +91,20 @@ test: $(TEST_TARGET)
 
 # Test for thread errors with Helgrind
 .PHONY: helgrind
-helgrind: $(TEST_TARGET) $(LOG_DIR)
-	valgrind --tool=helgrind --log-file=$(LOG_DIR)/helgrind.log ./$(TEST_TARGET)
-	valgrind --tool=helgrind --log-file=$(LOG_DIR)/helgrind_simd.log ./$(TARGET) simd 10000 784 10 10 10 0.5
+helgrind: $(TEST_TARGET) $(LOG_DIR)/$(HELGRIND_DIR)
+	valgrind --tool=helgrind --log-file=$(LOG_DIR)/$(HELGRIND_DIR)/helgrind.log ./$(TEST_TARGET)
+	valgrind --tool=helgrind --log-file=$(LOG_DIR)/$(HELGRIND_DIR)/helgrind_sequential.log ./$(TARGET) -m1 -t10000 -i784 -h10 -o10 -e10 -l0.1 -d0.0
+	valgrind --tool=helgrind --log-file=$(LOG_DIR)/$(HELGRIND_DIR)/helgrind_parallel.log ./$(TARGET) -m2 -t10000 -i784 -h10 -o10 -e10 -l0.1 -d0.0
+	valgrind --tool=helgrind --log-file=$(LOG_DIR)/$(HELGRIND_DIR)/helgrind_simd.log ./$(TARGET) -m3 -t10000 -i784 -h10 -o10 -e10 -l0.1 -d0.0
 	@echo "Helgrind thread error results saved to $(LOG_DIR)"
 
 # Test for memory errors with Valgrind 
 .PHONY: valgrind
-valgrind: $(TEST_TARGET) $(LOG_DIR)
-	valgrind -s --leak-check=full --show-leak-kinds=all  --track-origins=yes --log-file=$(LOG_DIR)/valgrind.log ./$(TEST_TARGET)
-	valgrind -s --leak-check=full --show-leak-kinds=all  --track-origins=yes --log-file=$(LOG_DIR)/valgrind_sequential.log ./$(TARGET) sequential 10000 784 10 10 10 0.5
+valgrind: $(TEST_TARGET) $(LOG_DIR)/$(VALGRIND_DIR)
+	valgrind -s --leak-check=full --show-leak-kinds=all  --track-origins=yes --log-file=$(LOG_DIR)/$(VALGRIND_DIR)/valgrind.log ./$(TEST_TARGET)
+	valgrind -s --leak-check=full --show-leak-kinds=all  --track-origins=yes --log-file=$(LOG_DIR)/$(VALGRIND_DIR)/valgrind_sequential.log ./$(TARGET) -m1 -t10000 -i784 -h10 -o10 -e10 -l0.1 -d0.0
+	valgrind -s --leak-check=full --show-leak-kinds=all  --track-origins=yes --log-file=$(LOG_DIR)/$(VALGRIND_DIR)/valgrind_parallel.log ./$(TARGET) -m2 -t10000 -i784 -h10 -o10 -e10 -l0.1 -d0.0 -n4 
+	valgrind -s --leak-check=full --show-leak-kinds=all  --track-origins=yes --log-file=$(LOG_DIR)/$(VALGRIND_DIR)/valgrind_simd.log ./$(TARGET) -m3 -t10000 -i784 -h10 -o10 -e10 -l0.1 -d0.0 -n4 
 	@echo "Valgrind memory error results saved to $(LOG_DIR)"
 
 # Benchmark using hyperfine
@@ -110,9 +124,9 @@ benchmark: $(TARGET) | benchmarks
 		--warmup 0 \
 		--show-output \
 		--export-markdown $(BENCHMARK_RESULT) \
-		'./out/mpt_nn sequential -m1 -t10000 -i784 -h128 -o10 -e10 -l0.1 -d0.0' \
-		'./out/mpt_nn parallel -m2 -t10000 -i784 -h128 -o10 -e10 -l0.1 -d0.0' \
-		'./out/mpt_nn simd -m3 -t10000 -i784 -h128 -o10 -e10 -l0.1 -d0.0'
+		'./out/mpt_nn -m1 -t10000 -i784 -h128 -o10 -e10 -l0.1 -d0.0' \
+		'./out/mpt_nn -m2 -t10000 -i784 -h128 -o10 -e10 -l0.1 -d0.0' \
+		'./out/mpt_nn -m3 -t10000 -i784 -h128 -o10 -e10 -l0.1 -d0.0'
 
 # Plot generation target	
 plot: $(BENCHMARK_RESULT)

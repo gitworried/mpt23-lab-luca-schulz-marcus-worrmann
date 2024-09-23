@@ -81,14 +81,14 @@ void print_options(void);
  * during training, based on the specified dropout rate. The remaining active neurons
  * are scaled by a factor of `1 / (1 - dropout_rate)` to maintain the overall output
  * distribution.
- * 
+ *
  * INFO: Amount of hidden nodes has to be taken into considaration when choosing the dropout rate.
- * For example: When having 128 hidden nodes a max. dropout rate should be choosen to achieve optimal results.
+ * For example: When having 128 hidden nodes a max. dropout rate of 0.2 should be choosen to achieve optimal results.
  * anything higher will lead to too many dropouts for such an amount of hidden nodes.
  *
  * @param layer Pointer to the array representing the layer's neuron activations.
  * @param size Number of neurons in the layer.
- * @param dropout_rate Probability of dropping a neuron (value between 0.0 and 1.0)
+ * @param dropout_rate Probability of dropping a neuron (value between 0.0 and 1.0).
  */
 void apply_dropout(double *layer, int size, double dropout_rate);
 
