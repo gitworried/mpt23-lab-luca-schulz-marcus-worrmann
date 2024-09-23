@@ -5,8 +5,8 @@
 
 void load_mnist(double **training_inputs, double **training_outputs, int numTrainingSets, int numInputs, int numOutputs)
 {
-    FILE *imageFile = fopen("train-images.idx3-ubyte", "rb");
-    FILE *labelFile = fopen("train-labels.idx1-ubyte", "rb");
+    FILE *imageFile = fopen("data/train-images.idx3-ubyte", "rb");
+    FILE *labelFile = fopen("data/train-labels.idx1-ubyte", "rb");
 
     if (imageFile == NULL || labelFile == NULL)
     {
