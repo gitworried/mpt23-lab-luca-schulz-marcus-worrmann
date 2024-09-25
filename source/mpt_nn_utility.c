@@ -94,6 +94,8 @@ void visualize_mnist_digit(double *input, int numInputs)
 
 void print_options(void)
 {
+    printf("\033[1;33mINFO:"
+           " If default parameters are not set with -D, options -m, -t, -i, -h, -o, -e and -l are mandatory and require an argument\033[0m\n");
     printf("Available options:\n");
     printf("  -d, --dropOut     <dropOutRate>        Set the droput rate [Between 0.0 - 1.0]\n");
     printf("  -D, --defaultParams                    Set default paramaters for training\n");
@@ -103,8 +105,8 @@ void print_options(void)
     printf("  -l, --learning    <learningRate>       Set the learning rate [Between 0.0 - 1.0]\n");
     printf("  -m, --mode        <mode>               Set the mode [1: sequential][2: parallel][3: simd]\n");
     printf("  -n, --numThreads  <numThreads>         Set the number of threads to be used while executing a parallel region\n");
-    printf("  -o, --outputs     <numOutput>          Set the number of output nodes\n");
-    printf("  -t, --trainsets   <numTrainingSets>    Set the number of training sets\n");
+    printf("  -o, --outputs     <numOutput>          Set the number of output nodes[10 for MNIST]\n");
+    printf("  -t, --trainsets   <numTrainingSets>    Set the number of training sets[max. 70000 for MNIST]\n");
     printf("  -v, --visualize                        Enable visualization\n");
     printf("  --help                                 Display this help and exit\n");
 }

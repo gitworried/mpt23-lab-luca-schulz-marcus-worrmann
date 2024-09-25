@@ -30,11 +30,10 @@ int main(int argc, char *argv[])
     int numThreads = 1;
     double learningRate = 0.01;
     double dropoutRate = 0.0;
+    size_t counter = 0;
 
     bool nProvided = false;
     bool dProvided = false;
-
-    const char *optstring = "Dd:e:h:i:l:m:n:o:t:v";
 
     struct option longopt[] =
         {
@@ -52,6 +51,10 @@ int main(int argc, char *argv[])
             {"visualize", no_argument, NULL, 'v'},
             {0, 0, 0, 0}};
 
+    const char *optstring = "Dd:e:h:i:l:m:n:o:t:v";
+
+    opterr = 0;
+
     while ((opt = getopt_long(argc, argv, optstring, longopt, NULL)) != -1)
     {
         switch (opt)
@@ -65,21 +68,21 @@ int main(int argc, char *argv[])
             epochs = 10;
             learningRate = 0.01;
             dropoutRate = 0.0;
-            printf("************************ INFO *************************\n");
-            printf("* Training mpt_nn with default parameters             *\n");
-            printf("* %-25s %-25s *\n", "Mode[1]:", "sequential");
-            printf("* %-25s %-25d *\n", "Training sets:", numTrainingSets);
-            printf("* %-25s %-25d *\n", "Input nodes:", numInputs);
-            printf("* %-25s %-25d *\n", "Hidden nodes:", numHiddenNodes);
-            printf("* %-25s %-25d *\n", "Output nodes:", numOutputs);
-            printf("* %-25s %-25d *\n", "Epochs:", epochs);
-            printf("* %-25s %-25.6f *\n", "Learning rate:", learningRate);
-            printf("* %-25s %-25.6f *\n", "Dropout rate:", dropoutRate);
+            printf("\033[1;33m************************** INFO ***************************\n");
+            printf("* Training mpt_nn with default parameters                 *\n");
+            printf("* %-25s %-29s *\n", "Mode[1]:", "sequential");
+            printf("* %-25s %-29d *\n", "Training sets:", numTrainingSets);
+            printf("* %-25s %-29d *\n", "Input nodes:", numInputs);
+            printf("* %-25s %-29d *\n", "Hidden nodes:", numHiddenNodes);
+            printf("* %-25s %-29d *\n", "Output nodes:", numOutputs);
+            printf("* %-25s %-29d *\n", "Epochs:", epochs);
+            printf("* %-25s %-29.6f *\n", "Learning rate:", learningRate);
+            printf("* %-25s %-29.6f *\n", "Dropout rate:", dropoutRate);
             if (nProvided)
             {
                 printf("* %-25s %-25d *\n", "Number of Threads:", numThreads);
             }
-            printf("*******************************************************\n");
+            printf("***********************************************************\033[0m\n");
             dProvided = true;
             break;
         case 'd':
@@ -87,15 +90,19 @@ int main(int argc, char *argv[])
             break;
         case 'e':
             epochs = atoi(optarg);
+            counter++;
             break;
         case 'h':
             numHiddenNodes = atoi(optarg);
+            counter++;
             break;
         case 'i':
             numInputs = atoi(optarg);
+            counter++;
             break;
         case 'l':
             learningRate = atof(optarg);
+            counter++;
             break;
         case 'n':
             numThreads = atoi(optarg);
@@ -103,66 +110,70 @@ int main(int argc, char *argv[])
             break;
         case 'm':
             mode = atoi(optarg);
+            counter++;
             break;
         case 'o':
             numOutputs = atoi(optarg);
+            counter++;
             break;
         case 't':
             numTrainingSets = atoi(optarg);
+            counter++;
             break;
         case 'v':
             visualize = 1;
             break;
         case '?':
             print_options();
-            break;
+            exit(EXIT_FAILURE);
         default:
-            print_options();
-            return 1;
+            exit(EXIT_FAILURE);
         }
+    }
+
+    printf("%ld\n", counter);
+
+    if (!dProvided && counter < 7)
+    {
+        printf("\033[1;31mMissing arguments. Please select -D for default parameters or set them yourself with the available options.\n");
+        printf("-? or --help to display all available options.\033[0m\n");
+        print_options();
+        exit(EXIT_FAILURE);
     }
 
     if (!dProvided)
     {
-        printf("************************ INFO *************************\n");
+        printf("\033[1;33m************************** INFO ***************************\n");
         printf("* Training mpt_nn with parameters:                    *\n");
 
         switch (mode)
         {
         case 1:
-            printf("* %-25s %-25s *\n", "Mode[1]:", "sequential");
+            printf("* %-25s %-29s *\n", "Mode[1]:", "sequential");
             break;
         case 2:
-            printf("* %-25s %-25s *\n", "Mode[2]:", "parallel");
+            printf("* %-25s %-29s *\n", "Mode[2]:", "parallel");
             break;
         case 3:
-            printf("* %-25s %-25s *\n", "Mode[3]:", "SIMD");
+            printf("* %-25s %-29s *\n", "Mode[3]:", "SIMD");
             break;
         default:
-            printf("* %-25s %-25d *\n", "Mode:", mode);
+            printf("* %-25s %-29d *\n", "Mode:", mode);
             break;
         }
 
-        printf("* %-25s %-25d *\n", "Training sets:", numTrainingSets);
-        printf("* %-25s %-25d *\n", "Input nodes:", numInputs);
-        printf("* %-25s %-25d *\n", "Hidden nodes:", numHiddenNodes);
-        printf("* %-25s %-25d *\n", "Output nodes:", numOutputs);
-        printf("* %-25s %-25d *\n", "Epochs:", epochs);
-        printf("* %-25s %-25.6f *\n", "Learning rate:", learningRate);
-        printf("* %-25s %-25.6f *\n", "Dropout rate:", dropoutRate);
+        printf("* %-25s %-29d *\n", "Training sets:", numTrainingSets);
+        printf("* %-25s %-29d *\n", "Input nodes:", numInputs);
+        printf("* %-25s %-29d *\n", "Hidden nodes:", numHiddenNodes);
+        printf("* %-25s %-29d *\n", "Output nodes:", numOutputs);
+        printf("* %-25s %-29d *\n", "Epochs:", epochs);
+        printf("* %-25s %-29.6f *\n", "Learning rate:", learningRate);
+        printf("* %-25s %-29.6f *\n", "Dropout rate:", dropoutRate);
         if (nProvided)
         {
-            printf("* %-25s %-25d *\n", "Number of Threads:", numThreads);
+            printf("* %-25s %-29d *\n", "Number of Threads:", numThreads);
         }
-        printf("*******************************************************\n");
-    }
-
-    if (argc <= 1)
-    {
-        printf("Missing arguments. Please select -D for default parameters or set them yourself with the available options.\n");
-        printf("-? or --help to display all available options.\n");
-        print_options();
-        return 1;
+        printf("***********************************************************\n\033[0m");
     }
 
     if (nProvided)
