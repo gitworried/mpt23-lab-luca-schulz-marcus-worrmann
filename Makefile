@@ -109,24 +109,23 @@ valgrind: $(TEST_TARGET) $(LOG_DIR)/$(VALGRIND_DIR)
 
 # Benchmark using hyperfine
 benchmark: $(TARGET) | benchmarks
-	@echo "Running benchmark..."
-	@echo "System Information:" > benchmarks/system_info.txt
-	@echo "===================" >> benchmarks/system_info.txt
-	@echo "OS and Kernel:" >> benchmarks/system_info.txt
-	@uname -a >> benchmarks/system_info.txt
-	@echo "\nCPU Information:" >> benchmarks/system_info.txt
-	@lscpu >> benchmarks/system_info.txt
-	@echo "\nMemory Information:" >> benchmarks/system_info.txt
-	@free -h >> benchmarks/system_info.txt
-	@echo "\nFull system information can be found in benchmarks/system_info.txt"
-	
+#	@echo "Running benchmark..."
+#	@echo "System Information:" > benchmarks/system_info.txt
+#	@echo "===================" >> benchmarks/system_info.txt
+#	@echo "OS and Kernel:" >> benchmarks/system_info.txt
+#	@uname -a >> benchmarks/system_info.txt
+#	@echo "\nCPU Information:" >> benchmarks/system_info.txt
+#	@lscpu >> benchmarks/system_info.txt
+#	@echo "\nMemory Information:" >> benchmarks/system_info.txt
+#	@free -h >> benchmarks/system_info.txt
+#	@echo "\nFull system information can be found in benchmarks/system_info.txt"
 	hyperfine \
-		--warmup 0 \
+		--warmup 3 \
 		--show-output \
 		--export-markdown $(BENCHMARK_RESULT) \
-		'./out/mpt_nn -m1 -t10000 -i784 -h128 -o10 -e10 -l0.1 -d0.0' \
-		'./out/mpt_nn -m2 -t10000 -i784 -h128 -o10 -e10 -l0.1 -d0.0' \
-		'./out/mpt_nn -m3 -t10000 -i784 -h128 -o10 -e10 -l0.1 -d0.0'
+		'./out/mpt_nn -m1 -t60000 -i784 -h128 -o10 -e10 -l0.01 -d0.1' \
+		'./out/mpt_nn -m2 -t60000 -i784 -h128 -o10 -e10 -l0.01 -d0.1' \
+		'./out/mpt_nn -m3 -t60000 -i784 -h128 -o10 -e10 -l0.01 -d0.1'
 
 # Plot generation target	
 plot: $(BENCHMARK_RESULT)

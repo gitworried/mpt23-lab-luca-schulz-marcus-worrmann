@@ -31,10 +31,15 @@ df <- df %>%
 # Remove rows with NA values in key columns.
 df <- df %>% filter(!is.na(Mean_s) & !is.na(Min_s) & !is.na(Max_s))
 
-# Check for doubled features.
+# Update the Command column based on the -m flag
 df <- df %>%
-  mutate(Command = ifelse(grepl("sequential", Command), "sequential",
-                          ifelse(grepl("parallel", Command), "parallel", "simd")))
+  mutate(Command = case_when(
+    grepl("-m1", Command) ~ "sequential",
+    grepl("-m2", Command) ~ "parallel",
+    grepl("-m3", Command) ~ "simd",
+    TRUE ~ "unknown"  
+  ))
+
 
 # Setting the order of each column as the benchmark test provided the results.
 df$Command <- factor(df$Command, levels = c("sequential", "parallel", "simd"))
@@ -50,25 +55,26 @@ max_color <- "#5B7553"
 
 # Extract system information
 cpu_info <- system("lscpu | grep 'Model name' | awk -F: '{print $2}'", intern = TRUE)
-cpu_cores <- system("lscpu | grep '^CPU(s):' | awk -F: '{print $2}'", intern = TRUE)
+cpu_cores <- system("lscpu | grep '^Core(s) per socket:' | awk -F: '{print $2}'", intern = TRUE)
 cpu_threads <- system("lscpu | grep 'Thread(s) per core' | awk -F: '{print $2}'", intern = TRUE)
-cpu_speed <- system("lscpu | grep 'MHz' | awk -F: '{print $2}'", intern = TRUE)
-gpu_info <- system("lspci | grep -i 'vga\\|3d\\|2d'", intern = TRUE)
-ram_info <- system("free -h | grep 'Mem:' | awk '{print $2}'", intern = TRUE)
+# cpu_speed <- system("lscpu | grep 'MHz' | awk -F: '{print $2}'", intern = TRUE)
+# gpu_info <- system("lspci | grep -i 'vga\\|3d\\|2d'", intern = TRUE)
+# ram_info <- system("free -h | grep 'Mem:' | awk '{print $2}'", intern = TRUE)
 
 # Format the information
 cpu_info <- trimws(cpu_info)
 cpu_cores <- trimws(cpu_cores)
 cpu_threads <- trimws(cpu_threads)
-cpu_speed <- trimws(cpu_speed)
-gpu_info <- trimws(gpu_info)
-ram_info <- trimws(ram_info)
+# cpu_speed <- trimws(cpu_speed)
+# gpu_info <- trimws(gpu_info)
+# ram_info <- trimws(ram_info)
 
 # Create a formatted string for display
 system_info <- paste0("CPU: ", cpu_info, "\n",
-                      "Cores: ", cpu_cores, ", Threads: ", cpu_threads, ", Speed: ", cpu_speed, " MHz\n",
-                      "GPU: ", gpu_info, "\n",
-                      "RAM: ", ram_info)
+                      "Core(s): ", cpu_cores, ", Thread(s) per core: ", cpu_threads)
+                     # , ", Speed: ", cpu_speed, " MHz\n",
+                     # "GPU: ", gpu_info, "\n",
+                     # "RAM: ", ram_info)
 
 # Create the plot and add system information in the caption
 p <- ggplot(df, aes(x = Command)) +

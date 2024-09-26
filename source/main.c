@@ -144,7 +144,7 @@ int main(int argc, char *argv[])
     if (!dProvided)
     {
         printf("\033[1;33m************************** INFO ***************************\n");
-        printf("* Training mpt_nn with parameters:                    *\n");
+        printf("* Training mpt_nn with parameters:                        *\n");
 
         switch (mode)
         {
