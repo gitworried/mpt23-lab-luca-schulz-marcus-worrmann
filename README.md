@@ -122,13 +122,20 @@ In der R-Konsole können die notwendigen Bibliotheken mit dem folgenden Code ins
 install.packages(c("ggplot2", "dplyr", "tidyr", "readr"))
 ```
 
-Abschließend kann das Skript zur Visualisierung der Benchmark-Ergebnisse mit dem Befehl:
+Zur Visualisierung der Ergebnisse stehen abschließend zwei Skripte bereit. Das erste Skript dient der Ausgabe der mit Hyperfine ermittelten Benchmarkergebnisse, während das zweite eine grafische Darstellung der ermittelten Genauigkeiten bereitstellt.
+Mit folgendem Befehl können die Benchmark-Ergebnisse ausgegeben werden:
 
 ```bash
-make plot
+make plot-benchmark
 ```
 
-ausgeführt werden. Die Ergebnisse können im hinterlegten Benchmark-Ordner eingesehen werden.
+Analog dazu kann mit dem nachfolgenden Befehl eine grafische Auswertung der Genauigkeit generiert werden:
+
+```bash
+make plot-accuracy
+```
+
+Die Ergebnisse beider Auswertungen stehen im entsprechenden Benchmark-Verzeichnis zur Verfügung.
 
 ## Dokumentation
 

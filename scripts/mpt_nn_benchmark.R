@@ -82,7 +82,7 @@ p <- ggplot(df, aes(x = Command)) +
   geom_bar(aes(y = Min_s, fill = "Min"), stat = "identity", alpha = 0.9, width = 0.05, position = position_nudge(x = 0.375)) +
   geom_bar(aes(y = Max_s, fill = "Max"), stat = "identity", alpha = 0.9, width = 0.05, position = position_nudge(x = 0.325)) +
 
-  # Settings for the legend
+# Settings for the legend
   scale_fill_manual(
     name = "Legend",
     values = c("Mean" = mean_color, "Min" = min_color, "Max" = max_color),
