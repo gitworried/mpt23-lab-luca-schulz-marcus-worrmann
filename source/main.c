@@ -319,7 +319,24 @@ int main(int argc, char *argv[])
         double averageLoss = totalLoss / numTrainingSets;
         double accuracy = (double)correctPredictions / numTrainingSets * 100.0;
         printf("Epoch %d/%d - Loss: %.6f - Accuracy: %.2f%% (%d/%d)\n", epoch + 1, epochs, averageLoss, accuracy, correctPredictions, numTrainingSets);
-    }
+        
+    	FILE *accuracyFile = fopen("benchmarks/accuracy_results.md", "a");
+		if (accuracyFile != NULL) {
+    		 const char *modeString;
+   		 switch (mode) {
+       			 case 1: modeString = "sequential"; break;
+       			 case 2: modeString = "parallel"; break;
+        		 case 3: modeString = "SIMD"; break;
+        		 default: modeString = "unknown"; break;
+		    	       }
+
+    	fprintf(accuracyFile, "Mode: %s | Epoch %d/%d - Loss: %.6f - Accuracy: %.2f%% (%d/%d)\n", modeString, epoch + 1, epochs, averageLoss, accuracy, correctPredictions, numTrainingSets);
+    	fclose(accuracyFile);
+	}
+	else {
+    		printf("Error opening file accuracy_results.md\n");
+	     }
+}
 
     free(hiddenLayer);
     free(outputLayer);

@@ -4,8 +4,10 @@ TEST_TARGET=out/mpt_nn_test
 
 # Benchmark output files
 BENCHMARK_RESULT=benchmarks/benchmark_results.md
-PLOT_SCRIPT=scripts/mpt_nn_plot.R
-PLOT_OUTPUT=benchmarks/benchmark_plot.png
+BENCHMARK_SCRIPT=scripts/mpt_nn_benchmark.R
+ACCURACY_SCRIPT=scripts/mpt_nn_accuracy.R
+BENCHMARK_OUTPUT=benchmarks/benchmark_plot.png
+ACCURACY_OUTPUT=benchmarks/accuracy_plot.png
 
 # Flags and options
 OPTIMIZE=-O3
@@ -127,19 +129,26 @@ benchmark: $(TARGET) | benchmarks
 		'./out/mpt_nn -m2 -t60000 -i784 -h128 -o10 -e10 -l0.01 -d0.1' \
 		'./out/mpt_nn -m3 -t60000 -i784 -h128 -o10 -e10 -l0.01 -d0.1'
 
-# Plot generation target	
-plot: $(BENCHMARK_RESULT)
-	@echo "Running R script to generate the plot..."
-	Rscript $(PLOT_SCRIPT)
+# Plot generation target based on flag
+plot:
+	@echo "Specify -b for benchmark plot or -a for accuracy plot."
+
+plot-benchmark: $(BENCHMARK_RESULT)
+	@echo "Generating benchmark plot..."
+	@Rscript $(BENCHMARK_SCRIPT)
+
+plot-accuracy: benchmarks
+	@echo "Generating accuracy plot..."
+	@Rscript $(ACCURACY_SCRIPT)
 
 # Ensure the benchmark has been run before plotting
 $(BENCHMARK_RESULT):
 	@echo "Benchmark results not found, running make benchmark..."
 	make benchmark
-
+	
 # Cleanup
 clean:
-	rm -Rf $(OUT_DIR) build *.results $(LOG_DIR) documentation doxygen benchmarks $(PLOT_OUTPUT)
+	rm -Rf $(OUT_DIR) build *.results $(LOG_DIR) documentation doxygen benchmarks $(BENCHMARK_OUTPUT) $(ACCURACY_OUTPUT)
 
 -include $(DEPS)
 
