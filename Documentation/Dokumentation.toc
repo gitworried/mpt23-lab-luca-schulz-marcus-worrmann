@@ -1,0 +1,25 @@
+\babel@toc {german}{}\relax 
+\contentsline {section}{\numberline {1}Einleitung}{4}{section.1}%
+\contentsline {section}{\numberline {2}Theoretische Grundlage}{5}{section.2}%
+\contentsline {subsection}{\numberline {2.1}Historischer Kontext}{5}{subsection.2.1}%
+\contentsline {subsection}{\numberline {2.2}Grundlagen neuronaler Netze}{6}{subsection.2.2}%
+\contentsline {subsection}{\numberline {2.3}Mathematische Herleitung}{9}{subsection.2.3}%
+\contentsline {subsubsection}{\numberline {I}Forward Propagation}{10}{subsubsection.2.3.1}%
+\contentsline {subsubsection}{\numberline {II}Fehlerbestimmung}{11}{subsubsection.2.3.2}%
+\contentsline {subsubsection}{\numberline {III}Back Propagation}{11}{subsubsection.2.3.3}%
+\contentsline {section}{\numberline {3}Implementierung des neuronalen Netzwerks}{12}{section.3}%
+\contentsline {subsection}{\numberline {3.1}MNIST-Datensatz}{12}{subsection.3.1}%
+\contentsline {subsection}{\numberline {3.2}Lernmethoden}{12}{subsection.3.2}%
+\contentsline {subsubsection}{\numberline {I}Forward Propagation}{12}{subsubsection.3.2.1}%
+\contentsline {subsubsection}{\numberline {II}Fehlerbestimmung}{12}{subsubsection.3.2.2}%
+\contentsline {subsubsection}{\numberline {III}Backpropagation}{12}{subsubsection.3.2.3}%
+\contentsline {subsection}{\numberline {3.3}Berechnung der Genauigkeit}{12}{subsection.3.3}%
+\contentsline {subsection}{\numberline {3.4}Implementierungsansätze}{12}{subsection.3.4}%
+\contentsline {subsubsection}{\numberline {I}Sequentiell}{12}{subsubsection.3.4.1}%
+\contentsline {subsubsection}{\numberline {II}Parallel}{12}{subsubsection.3.4.2}%
+\contentsline {subsubsection}{\numberline {III}SIMD}{12}{subsubsection.3.4.3}%
+\contentsline {section}{\numberline {4}Ergebnisse}{13}{section.4}%
+\contentsline {subsection}{\numberline {4.1}Erste Testläufe}{13}{subsection.4.1}%
+\contentsline {subsection}{\numberline {4.2}Benchmarkanalyse mit Hyperfine}{15}{subsection.4.2}%
+\contentsline {subsection}{\numberline {4.3}Lernfortschritt und Vorhersagbarkeit}{16}{subsection.4.3}%
+\contentsline {section}{\numberline {5}Auswertung und Fazit}{18}{section.5}%
