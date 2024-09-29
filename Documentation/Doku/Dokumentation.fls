@@ -1,9 +1,9 @@
-PWD /home/luca/source/repos/uni/mpt23-lab-marcus-worrmann-luca-schulz/Documentation
+PWD /home/luca/source/repos/uni/mpt23-lab-marcus-worrmann-luca-schulz/Documentation/Doku
 INPUT /etc/texmf/web2c/texmf.cnf
 INPUT /usr/share/texmf/web2c/texmf.cnf
 INPUT /usr/share/texlive/texmf-dist/web2c/texmf.cnf
 INPUT /home/luca/.texlive2021/texmf-var/web2c/pdftex/pdflatex.fmt
-INPUT /home/luca/source/repos/uni/mpt23-lab-marcus-worrmann-luca-schulz/Documentation/Dokumentation.tex
+INPUT /home/luca/source/repos/uni/mpt23-lab-marcus-worrmann-luca-schulz/Documentation/Doku/Dokumentation.tex
 OUTPUT Dokumentation.log
 INPUT /usr/share/texlive/texmf-dist/tex/latex/base/article.cls
 INPUT /usr/share/texlive/texmf-dist/tex/latex/base/article.cls

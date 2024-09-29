@@ -26,6 +26,10 @@ LOG_DIR=logs
 HELGRIND_DIR=helgrind
 VALGRIND_DIR=valgrind
 
+DOXYFILE=Doxyfile
+DOC_DIR=Documentation
+DOXYGEN_DIR=$(DOC_DIR)/doxygen
+
 # The sources that make up the main executable.
 SRCS=$(filter-out %_test.c,$(wildcard $(SRC_DIR)/*.c))
 
@@ -110,6 +114,7 @@ valgrind: $(TEST_TARGET) $(LOG_DIR)/$(VALGRIND_DIR)
 	@echo "Valgrind memory error results saved to $(LOG_DIR)"
 
 # Benchmark using hyperfine
+.PHONY: benchmark
 benchmark: $(TARGET) | benchmarks
 #	@echo "Running benchmark..."
 #	@echo "System Information:" > benchmarks/system_info.txt
@@ -130,6 +135,7 @@ benchmark: $(TARGET) | benchmarks
 		'./out/mpt_nn -m3 -t60000 -i784 -h128 -o10 -e10 -l0.01 -d0.1'
 
 # Plot generation target based on flag
+.PHONY: plot
 plot:
 	@echo "Specify -b for benchmark plot or -a for accuracy plot."
 
@@ -145,10 +151,19 @@ plot-accuracy: benchmarks
 $(BENCHMARK_RESULT):
 	@echo "Benchmark results not found, running make benchmark..."
 	make benchmark
+
+.PHONY: doxygen
+doxygen: $(DOXYGEN_DIR)
+	@echo "Generating Doxygen-Documentation..."
+	doxygen $(DOXYFILE)
+	make -C $(DOXYGEN_DIR)/latex
+
+$(DOXYGEN_DIR):
+	@mkdir -p $(DOXYGEN_DIR)
 	
 # Cleanup
 clean:
-	rm -Rf $(OUT_DIR) build *.results $(LOG_DIR) documentation doxygen benchmarks $(BENCHMARK_OUTPUT) $(ACCURACY_OUTPUT)
+	rm -Rf $(OUT_DIR) build *.results $(LOG_DIR) doxygen benchmarks $(BENCHMARK_OUTPUT) $(ACCURACY_OUTPUT) */doxygen
 
 -include $(DEPS)
 

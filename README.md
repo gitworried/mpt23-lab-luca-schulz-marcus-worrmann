@@ -143,7 +143,7 @@ Zurzeit ist es leider nur via Doxygen möglich detaillierte Auskunft über die f
 Dabei lässt sich ein Doxygen Dokumentations Ordner über die Kommandozeile kompilieren. <br>
 
 ```bash
-doxygen
+doxygen Doxyfile
 ```
 
 In dem Ordner doxygen befindet sich ein Unterordner latex, in dem eine generiertes latex Projekt inkl. Makefile mit Informationen zu jedem source file zur Verfügung steht.
