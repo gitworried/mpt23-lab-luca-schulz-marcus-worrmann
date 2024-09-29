@@ -1,25 +1,40 @@
 \babel@toc {german}{}\relax 
-\contentsline {section}{\numberline {1}Einleitung}{4}{section.1}%
-\contentsline {section}{\numberline {2}Theoretische Grundlage}{5}{section.2}%
-\contentsline {subsection}{\numberline {2.1}Historischer Kontext}{5}{subsection.2.1}%
-\contentsline {subsection}{\numberline {2.2}Grundlagen neuronaler Netze}{6}{subsection.2.2}%
-\contentsline {subsection}{\numberline {2.3}Mathematische Herleitung}{9}{subsection.2.3}%
-\contentsline {subsubsection}{\numberline {I}Forward Propagation}{10}{subsubsection.2.3.1}%
-\contentsline {subsubsection}{\numberline {II}Fehlerbestimmung}{11}{subsubsection.2.3.2}%
-\contentsline {subsubsection}{\numberline {III}Back Propagation}{11}{subsubsection.2.3.3}%
-\contentsline {section}{\numberline {3}Implementierung des neuronalen Netzwerks}{12}{section.3}%
-\contentsline {subsection}{\numberline {3.1}MNIST-Datensatz}{12}{subsection.3.1}%
-\contentsline {subsection}{\numberline {3.2}Lernmethoden}{12}{subsection.3.2}%
-\contentsline {subsubsection}{\numberline {I}Forward Propagation}{12}{subsubsection.3.2.1}%
-\contentsline {subsubsection}{\numberline {II}Fehlerbestimmung}{12}{subsubsection.3.2.2}%
-\contentsline {subsubsection}{\numberline {III}Backpropagation}{12}{subsubsection.3.2.3}%
-\contentsline {subsection}{\numberline {3.3}Berechnung der Genauigkeit}{12}{subsection.3.3}%
-\contentsline {subsection}{\numberline {3.4}Implementierungsansätze}{12}{subsection.3.4}%
-\contentsline {subsubsection}{\numberline {I}Sequentiell}{12}{subsubsection.3.4.1}%
-\contentsline {subsubsection}{\numberline {II}Parallel}{12}{subsubsection.3.4.2}%
-\contentsline {subsubsection}{\numberline {III}SIMD}{12}{subsubsection.3.4.3}%
-\contentsline {section}{\numberline {4}Ergebnisse}{13}{section.4}%
-\contentsline {subsection}{\numberline {4.1}Erste Testläufe}{13}{subsection.4.1}%
-\contentsline {subsection}{\numberline {4.2}Benchmarkanalyse mit Hyperfine}{15}{subsection.4.2}%
-\contentsline {subsection}{\numberline {4.3}Lernfortschritt und Vorhersagbarkeit}{16}{subsection.4.3}%
-\contentsline {section}{\numberline {5}Auswertung und Fazit}{18}{section.5}%
+\contentsline {section}{\numberline {1}Einleitung}{5}{section.1}%
+\contentsline {section}{\numberline {2}Theoretische Grundlage}{6}{section.2}%
+\contentsline {subsection}{\numberline {2.1}Historischer Kontext}{6}{subsection.2.1}%
+\contentsline {subsection}{\numberline {2.2}Grundlagen neuronaler Netze}{7}{subsection.2.2}%
+\contentsline {subsection}{\numberline {2.3}Mathematische Herleitung}{10}{subsection.2.3}%
+\contentsline {subsubsection}{\numberline {I}Forward Propagation}{11}{subsubsection.2.3.1}%
+\contentsline {subsubsection}{\numberline {II}Fehlerbestimmung}{12}{subsubsection.2.3.2}%
+\contentsline {subsubsection}{\numberline {III}Back Propagation}{12}{subsubsection.2.3.3}%
+\contentsline {section}{\numberline {3}Implementierung des neuronalen Netzwerks}{13}{section.3}%
+\contentsline {subsection}{\numberline {3.1}MNIST-Datensatz}{13}{subsection.3.1}%
+\contentsline {section}{\numberline {4}Implementierung des neuronalen Netzwerks in C}{14}{section.4}%
+\contentsline {subsection}{\numberline {4.1}Verwendung von OpenMP}{14}{subsection.4.1}%
+\contentsline {subsection}{\numberline {4.2}mpt\_nn}{15}{subsection.4.2}%
+\contentsline {subsubsection}{\numberline {I}Aktivierungsfunktionen}{15}{subsubsection.4.2.1}%
+\contentsline {subsubsection}{\numberline {II}ForwardPass(forwardpropagation)}{15}{subsubsection.4.2.2}%
+\contentsline {paragraph}{sequential}{16}{section*.9}%
+\contentsline {paragraph}{parallel}{16}{section*.10}%
+\contentsline {paragraph}{simd}{17}{section*.11}%
+\contentsline {subsubsection}{\numberline {III}Backpropagation}{17}{subsubsection.4.2.3}%
+\contentsline {subsection}{\numberline {4.3}mpt\_nn\_utility}{18}{subsection.4.3}%
+\contentsline {subsubsection}{\numberline {I}load\_mnist}{19}{subsubsection.4.3.1}%
+\contentsline {subsubsection}{\numberline {II}initialize\_weights(), initialize\_bias()}{19}{subsubsection.4.3.2}%
+\contentsline {subsubsection}{\numberline {III}apply\_dropout()}{19}{subsubsection.4.3.3}%
+\contentsline {subsubsection}{\numberline {IV}visualize\_mnist\_digit()}{19}{subsubsection.4.3.4}%
+\contentsline {subsubsection}{\numberline {V}print\_options()}{19}{subsubsection.4.3.5}%
+\contentsline {subsection}{\numberline {4.4}main}{19}{subsection.4.4}%
+\contentsline {subsubsection}{\numberline {I}Verarbeitung der command line Parameter}{19}{subsubsection.4.4.1}%
+\contentsline {subsubsection}{\numberline {II}Initialisierung}{20}{subsubsection.4.4.2}%
+\contentsline {subsubsection}{\numberline {III}Training des Netzwerks}{21}{subsubsection.4.4.3}%
+\contentsline {subsubsection}{\numberline {IV}Speicherfreigabe}{21}{subsubsection.4.4.4}%
+\contentsline {subsection}{\numberline {4.5}mpt\_nn\_tests}{21}{subsection.4.5}%
+\contentsline {subsubsection}{\numberline {I}test\_sigmoid()}{21}{subsubsection.4.5.1}%
+\contentsline {subsubsection}{\numberline {II}test\_initialize\_weights()}{21}{subsubsection.4.5.2}%
+\contentsline {subsubsection}{\numberline {III}test\_forward\_pass(), test\_backpropagation()}{21}{subsubsection.4.5.3}%
+\contentsline {section}{\numberline {5}Ergebnisse}{22}{section.5}%
+\contentsline {subsection}{\numberline {5.1}Erste Testläufe}{22}{subsection.5.1}%
+\contentsline {subsection}{\numberline {5.2}Benchmarkanalyse mit Hyperfine}{24}{subsection.5.2}%
+\contentsline {subsection}{\numberline {5.3}Lernfortschritt und Vorhersagbarkeit}{25}{subsection.5.3}%
+\contentsline {section}{\numberline {6}Auswertung und Fazit}{27}{section.6}%
