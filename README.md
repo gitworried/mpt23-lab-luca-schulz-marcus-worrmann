@@ -139,21 +139,12 @@ Die Ergebnisse beider Auswertungen stehen im entsprechenden Benchmark-Verzeichni
 
 ## Dokumentation
 
-Zurzeit ist es leider nur via Doxygen möglich detaillierte Auskunft über die funktionen des mpt_nn zu erhalten.<br>
-Dabei lässt sich ein Doxygen Dokumentations Ordner über die Kommandozeile kompilieren. <br>
+Für eine detaillierte übersicht der Funktionen des mpt_nn ist, lässt sich eine doxygen Dokumentation mit make erstellen.<br>
 
 ```bash
-doxygen Doxyfile
+make doxygen
 ```
-
-In dem Ordner doxygen befindet sich ein Unterordner latex, in dem eine generiertes latex Projekt inkl. Makefile mit Informationen zu jedem source file zur Verfügung steht.
-
-```bash
-make
-```
-
-Um eine PDF zu generieren.
-
+Der befehlt baut ein doxygen Projekt in dem ordner Dokumentation und compiliert eine PDF in dem dazugehörigen latex ordner.
 ## TODO
 
 - [x] Doxygen Doku<br>
