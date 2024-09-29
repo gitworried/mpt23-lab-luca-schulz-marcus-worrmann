@@ -97,18 +97,18 @@ void print_options(void)
     printf("\033[1;33mINFO:"
            " If default parameters are not set with -D, options -m, -t, -i, -h, -o, -e and -l are mandatory and require an argument\033[0m\n");
     printf("Available options:\n");
-    printf("  -d, --dropOut     <dropOutRate>        Set the droput rate [Between 0.0 - 1.0]\n");
+    printf("  -d, --dropOut     <dropOutRate>        Set the droput rate[Float between 0.0 - 1.0]\n");
     printf("  -D, --defaultParams                    Set default paramaters for training\n");
     printf("  -e, --epochs      <numEpochs>          Set the number of epochs for training\n");
     printf("  -h, --hidden      <numHiddenNodes>     Set the number of hidden nodes\n");
-    printf("  -i, --inputs      <numInputs>          Set the number of input nodes [784 for MNIST]\n");
-    printf("  -l, --learning    <learningRate>       Set the learning rate [Between 0.0 - 1.0]\n");
+    printf("  -i, --inputs      <numInputs>          Set the number of input nodes[784 for MNIST]\n");
+    printf("  -l, --learning    <learningRate>       Set the learning rate [Float between 0.0 - 1.0]\n");
     printf("  -m, --mode        <mode>               Set the mode [1: sequential][2: parallel][3: simd]\n");
     printf("  -n, --numThreads  <numThreads>         Set the number of threads to be used while executing a parallel region\n");
     printf("  -o, --outputs     <numOutput>          Set the number of output nodes[10 for MNIST]\n");
-    printf("  -t, --trainsets   <numTrainingSets>    Set the number of training sets[max. 70000 for MNIST]\n");
+    printf("  -t, --trainsets   <numTrainingSets>    Set the number of training sets[max. 60000 for MNIST]\n");
     printf("  -v, --visualize                        Enable visualization\n");
-    printf("  --help                                 Display this help and exit\n");
+    printf("  -?, --help                             Display this help and exit\n");
 }
 
 void apply_dropout(double *layer, int size, double dropout_rate)

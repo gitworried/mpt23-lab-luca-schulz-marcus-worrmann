@@ -16,10 +16,16 @@
 #include "mpt_nn.h"
 #include "mpt_nn_utility.h"
 
+/**
+ * @brief 
+ * 
+ * @param argc 
+ * @param argv 
+ * @return int 
+ */
 int main(int argc, char *argv[])
 {
     int opt;
-
     int visualize = 0;
     int mode = 1;
     int numTrainingSets = 10000;
@@ -28,9 +34,12 @@ int main(int argc, char *argv[])
     int numOutputs = 10;
     int epochs = 10;
     int numThreads = 1;
+
+    size_t counter = 0;
+
     double learningRate = 0.01;
     double dropoutRate = 0.0;
-    size_t counter = 0;
+
 
     bool nProvided = false;
     bool dProvided = false;
@@ -125,13 +134,11 @@ int main(int argc, char *argv[])
             break;
         case '?':
             print_options();
-            exit(EXIT_FAILURE);
+            exit(EXIT_SUCCESS);
         default:
             exit(EXIT_FAILURE);
         }
     }
-
-    printf("%ld\n", counter);
 
     if (!dProvided && counter < 7)
     {
