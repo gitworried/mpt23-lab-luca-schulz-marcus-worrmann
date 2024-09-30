@@ -377,25 +377,30 @@ Trainingsgrundlage für Bildklassifikationsalgorithmen verwendet. Der Datensatz 
 Insgesamt enthält der Datensatz 70.000 Bilder handgeschriebener Ziffern im Bereich von 0 bis 9. 
 Für Trainingszwecke werden 60.000 der Bilder verwendet, während die restlichen 10.000 zur 
 Validierung und zur Berechnung der Genauigkeit herangezogen werden.
-\newpage
-\section{Implementierung des neuronalen Netzwerks in C}
-\label{sec:implementierung}
+
+\newpage %PAGEBREAK
+
+\subsection{Implementierung in C}\label{sec:implementierung}
 
 In diesem Kapitel wird die Implementierung des neuronalen Netzwerks in der Programmiersprache C erläutert. 
-Das Projekt ist modular aufgebaut und besteht aus mehreren Dateien, die jeweils unterschiedliche Aspekte des Netzwerks abdecken. Die Hauptkomponenten sind:
+Das Projekt ist modular aufgebaut und besteht aus mehreren Dateien, die jeweils unterschiedliche Aspekte des Netzwerks abdecken. 
+Die Hauptkomponenten hierbei sind:
 
 \begin{itemize}
-    \item \texttt{mpt\_nn.c}: Enthält die Kernfunktionen für die Vorwärts- und Rückwärtsausbreitung des Netzwerks.
+    \item \texttt{mpt\_nn.c}: Enthält die Kernfunktionen für die ForwardPass und die Backpropagation des Netzwerks.
     \item \texttt{mpt\_nn\_utility.c}: Beinhaltet Hilfsfunktionen für die Datenverarbeitung und Initialisierung.
     \item \texttt{main.c}: Die Hauptprogrammdatei, welche das Training und die Auswertung des Netzwerks steuert.
     \item \texttt{mpt\_nn\_test.c}: Enthält Unit-Tests zur Validierung der Netzwerkfunktionen.
 \end{itemize}
 
-Das neuronale Netzwerk wurde so konzipiert, dass es sowohl sequenziell als auch parallel ausgeführt werden kann. Durch die Verwendung von OpenMP wird die Möglichkeit geschaffen, die Berechnungen auf mehrere Threads zu verteilen und somit die Leistung auf Mehrkernprozessoren zu optimieren.
+Das neuronale Netzwerk wurde so konzipiert, dass es sowohl sequenziell als auch parallel ausgeführt werden kann. Durch die Verwendung 
+von OpenMP wird die Möglichkeit geschaffen, die Berechnungen auf mehrere Threads zu verteilen und somit die 
+Leistung auf Mehrkernprozessoren zu optimieren.
 
 \subsection{Verwendung von OpenMP}
 
-OpenMP ist eine API zur Unterstützung von Multithreading in C und ermöglicht die einfache Parallelisierung von Codeabschnitten durch Compiler-Direktiven. Die in diesem Projekt verwendeten Direktiven sind:
+OpenMP ist eine API zur Unterstützung von Multithreading in C und ermöglicht die einfache Parallelisierung von 
+Codeabschnitten durch Compiler-Direktiven. Die in diesem Projekt verwendeten Direktiven lauten:
 
 \begin{itemize}
     \item \texttt{\#pragma omp parallel for}: Parallelisiert die nachfolgende Schleife über die verfügbaren Threads.
@@ -408,7 +413,7 @@ Durch die Kombination dieser Direktiven werden die Berechnungen effizient auf di
 \subsection{mpt\_nn}
 \label{subsec:mpt_nn}
 
-Die Datei \texttt{mpt\_nn.c} enthält die Kernimplementierung des neuronalen Netzwerks, einschließlich der Funktionen für den Vorwärts- und Rückwärtsdurchlauf.
+Die Datei \texttt{mpt\_nn.c} enthält die Kernimplementierung des neuronalen Netzwerks, einschließlich der Funktionen für den ForwardPass und die Backpropagation.
 
 \subsubsection{Aktivierungsfunktionen}
 
@@ -418,29 +423,24 @@ Die Sigmoid-Funktion ist eine häufig verwendete Aktivierungsfunktion in neurona
 Sie transformiert den Eingabewert \( x \) in einen Wert zwischen 0 und 1. 
 Dies ermöglicht es dem Netzwerk, nichtlineare Beziehungen zu modellieren und Wahrscheinlichkeiten abzubilden.
 
-Die Sigmoid-Funktion ist mathematisch wie folgt definiert:
-
-\[
-\sigma(x) = \frac{1}{1 + e^{-x}}
-\]
-
-Und hat folgende Eigenschaften:
+Die aus \autoref{tab:Aktivierungsfunktion} beschriebene Funktion reflektiert hierbei folgende Eigenschaften:
 
 \begin{itemize}
-    \item Für sehr große negative Werte von \( x \) nähert sich \( \sigma(x) \) dem Wert 0.
-    \item Für sehr große positive Werte von \( x \) nähert sich \( \sigma(x) \) dem Wert 1.
-    \item Bei \( x = 0 \) nimmt die Funktion den Wert \( \sigma(0) = 0{,}5 \) an.
+    \item Für sehr große negative Werte von \( x \) nähert sich \( f(x) \) dem Wert 0.
+    \item Für sehr große positive Werte von \( x \) nähert sich \( f(x) \) dem Wert 1.
+    \item Bei \( x = 0 \) nimmt die Funktion den Wert \( f(0) = 0{,}5 \) an.
 \end{itemize}
 
 Zusätzlich zur Sigmoid-Funktion wird die Ableitung dieser benötigt, um die Gradienten während der Backpropagation zu berechnen.
 
-\subsubsection{ForwardPass(forwardpropagation)}
+\subsubsection{ForwardPass(Forwardpropagation)}
 
-Der forwardpass berechnet die Ausgaben des mpt\_nn basierend auf den Eingaben und den aktuellen Gewichten und Biases. 
+Der Forwardpass berechnet die Ausgaben des mpt\_nn basierend auf den Eingaben, den aktuellen Gewichten und Biases. 
 Die Berechnung erfolgt in zwei Hauptschritten:
 
 \begin{enumerate}
-    \item \textbf{Berechnung der hidden Layers}: Jede Neuron der hidden Layers summiert die gewichteten Eingaben und den Bias und wendet die Aktivierungsfunktion an.\ref{fhidden}
+    \item \textbf{Berechnung der hidden Layers}: Jedes Neuron der Hidden-Layer summiert die gewichteten Eingaben und 
+    den Bias und wendet die Aktivierungsfunktion an.\ref{fhidden}
     \begin{lstlisting}[language=C, caption={forwardpass hidden}, label={fhidden}]
 for (int i = 0; i < numHiddenNodes; i++)
 {
@@ -452,8 +452,9 @@ for (int i = 0; i < numHiddenNodes; i++)
     hiddenLayer[i] = sigmoid(activation);
 }
     \end{lstlisting}
-    \item \textbf{Anwendung der dropout Rate}: Dropout Rate wird angweandt wenn größer als 0
-    \item \textbf{Berechnung der Ausgabeschicht}: Wie in der hidden Layers werden hier die Ausgaben der hidden Layers verarbeitet, um die endgültigen Ausgaben des Netzwerks zu erhalten.\ref{foutput}
+    \item \textbf{Anwendung der Dropout - Rate}
+    \item \textbf{Berechnung der Ausgabeschicht}: Wie in den Hidden-Layers werden hier die Ausgaben dieser verarbeitet, 
+    um die endgültigen Ausgaben des Netzwerks zu erhalten.\ref{foutput}
     \begin{lstlisting}[language=C, caption={forwardpass output}, label={foutput}]
 for (int i = 0; i < numOutputs; i++)
 {
@@ -468,14 +469,18 @@ for (int i = 0; i < numOutputs; i++)
 
 \end{enumerate}
 
-Dabei wurden drei Versionen des forward pass implementiert und unterscheiden sich wie folgt:
+Dabei wurden drei Versionen des ForwardPass implementiert und unterscheiden sich wie folgt:
 
-\paragraph{sequential}
+\paragraph{sequential:}
 
-Die Berechnungen in einer einzelnen Schleife ohne Parallelisierung durchgeführt und dienen als Basis für parallel und simd.
-\paragraph{parallel}
+Die Berechnungen in einer einzelnen Schleife ohne Parallelisierung wird durchgeführt und 
+dient als Basis für parallel und simd.
 
-Nutzt OpenMP, um die Schleifen, die über die Neuronen iterieren, auf mehrere Threads zu verteilen. Die threads werden auf den einzelnen Kernen der CPU verteilt und beschläunigen so die Berechnung.\ref{fparallel}
+\paragraph{parallel:}
+
+Nutzt OpenMP, um die Schleifen, die über die Neuronen iterieren, auf mehrere Threads zu verteilen. 
+Die Threads werden auf den einzelnen Kernen der CPU verteilt und beschleunigen so die 
+Berechnung.\ref{fparallel}
 \begin{lstlisting}[language=C, caption={forwardpass parallel}, label={fparallel}]
 #pragma omp parallel for schedule(static)
 for (int i = 0; i < numHiddenNodes; i++)
@@ -489,7 +494,7 @@ for (int i = 0; i < numHiddenNodes; i++)
 }
 \end{lstlisting}
 
-\paragraph{simd}
+\paragraph{simd:}
 Die OpenMP-Direktiven \texttt{parallel for} und \texttt{simd} werden kombiniert. Dies ermöglicht sowohl die Parallelisierung auf Thread-Ebene als auch die Nutzung von Vektorisierungsfähigkeiten moderner Prozessoren, um mehrere Datenpunkte gleichzeitig zu verarbeiten.\ref{fsimd}
 \begin{lstlisting}[language=C, caption={forwardpass simd}, label={fsimd}]
 #pragma omp parallel for simd schedule(static)
@@ -508,7 +513,7 @@ Die OpenMP-Direktiven \texttt{parallel for} und \texttt{simd} werden kombiniert.
 
 \subsubsection{Backpropagation}
 
-Die backpropagation aktualisiert die Gewichte und Biases des Netzwerks basierend auf dem Fehler zwischen der vorhergesagten und der tatsächlichen Ausgabe.
+Die Backpropagation aktualisiert die Gewichte und Bias des Netzwerks basierend auf dem Fehler zwischen der vorhergesagten und der tatsächlichen Ausgabe.
 Dies erfolgt durch:
 
 \begin{enumerate}
@@ -521,7 +526,7 @@ for (int i = 0; i < numOutputs; i++)
 }
     \end{lstlisting}
     
-    \item \textbf{Berechnung der Fehler in der hidden Layers}: Der Fehler wird rückwärts durch das Netzwerk propagiert, wobei die Gewichte und die Ableitung der Aktivierungsfunktion berücksichtigt werden.\ref{bdeltah}
+    \item \textbf{Berechnung der Fehler in den Hidden-Layers}: Der Fehler wird rückwärts durch das Netzwerk propagiert, wobei die Gewichte und die Ableitung der Aktivierungsfunktion berücksichtigt werden.\ref{bdeltah}
     \begin{lstlisting}[language=C, caption={backpropagation deltaHidden}, label={bdeltah}]
 for (int i = 0; i < numHiddenNodes; i++)
 {
@@ -534,7 +539,7 @@ for (int i = 0; i < numHiddenNodes; i++)
 }
     \end{lstlisting}
 
-    \item \textbf{Aktualisierung der Gewichte und Biases}: Basierend auf den berechneten Fehlern werden die Gewichte und Biases angepasst, um den Gesamtfehler zu minimieren.\ref{bweights}
+    \item \textbf{Aktualisierung der Gewichte und Bias}: Basierend auf den berechneten Fehlern werden die Gewichte und Bias angepasst, um den Gesamtfehler zu minimieren.\ref{bweights}
     \begin{lstlisting}[language=C, caption={backpropagation weights}, label={bweights}]
 for (int i = 0; i < numOutputs; i++)
 {
@@ -556,7 +561,8 @@ for (int i = 0; i < numHiddenNodes; i++)
 
 \end{enumerate}
 
-Wie auch bei dem forwardpass wurden hier ebenfalls sequenzielle und parallele Versionen implementiert, die analog zur forwardpropagation funktionieren.
+Wie auch bei dem forwardpass wurden hier ebenfalls sequenzielle und parallele Versionen 
+implementiert, die analog zur Forwardpropagation funktionieren.
 
 \subsection{mpt\_nn\_utility}
 \label{subsec:mpt_nn_utility}
@@ -566,70 +572,52 @@ Die Datei \texttt{mpt\_nn\_utility.c} enthält verschiedene Hilfsfunktionen, wie
 
 \subsubsection{load\_mnist}
 
-Lädt die MNIST-Datensätze. 
 Die Funktion öffnet die entsprechenden Dateien für Bilder und Labels, liest die Daten ein und normalisiert die Pixelwerte. 
 Die Labels werden in One-Hot-Vektoren umgewandelt, um sie für das Training zu nutzen.
 
 \subsubsection{initialize\_weights(), initialize\_bias()}
 
-Initialisierung der Gewichte und Biases auf kleine Zufallswerte. 
-Dies ist wichtig, um Symmetrien im Netzwerk zu brechen und den Lernprozess zu ermöglichen.
+Initialisierung der Gewichte und Bias auf kleine Zufallswerte. 
+Dies ist wichtig, um Symmetrien im Netzwerk zu aufzubrechen und den Lernprozess zu ermöglichen.
 
 \subsubsection{apply\_dropout()}
 
 Setzt bestimmte Neuronen mit einer festgelegten Wahrscheinlichkeit auf Null. 
-Dies dient der Regularisierung und hilft, Overfitting zu verhindern.
+Dies dient der Regularisierung und hilft ein Overfitting zu verhindern.
 
 \subsubsection{visualize\_mnist\_digit()}
 
 Ermöglicht die ASCII-Visualisierung der MNIST-Bilder. 
-Dient dazu, die Daten zu überprüfen und sicherzustellen, dass sie korrekt geladen wurden.
-Außerdem bietet sie eine möglichkeit den Lehrnvorgang des mpt\_nn visuell verfolgen zu können 
+Dies dient dazu, die Daten zu überprüfen und sicherzustellen, dass diese korrekt geladen wurden.
+Außerdem bietet sie eine möglichkeit den Lehrnvorgang des mpt\_nn visuell nachverfolgen zu können 
 
 \subsubsection{print\_options()}
 
-Gibt eine Liste der verfügbaren command line aprameter, mit dazugehöriger Info auf dem Terminal aus.
+Gibt eine Liste der verfügbaren \texttt{command line} Parameter mit dazugehöriger Info auf dem Terminal aus.
 
 \subsection{main}
 \label{subsec:main}
 
-Die \texttt{main.c} Datei Implementiert die Nutzung von commandline Parametern steuert den Ablauf des Trainingsprozesses.
+Die \texttt{main.c}-Datei implementiert die Nutzung von \texttt{command line} Parametern und steuert hierdurch den Ablauf des Trainingsprozesses.
 
 \subsubsection{Verarbeitung der command line Parameter}
 
-Durch die Verwendung von \texttt{getopt\_long()} ist es den Nutzern möglich, das mpt\_nn beim starten nach belieb zu konfigurieren. 
-Der Nutzer kann Parameter wie den Modus (sequenziell, parallel, SIMD), die Anzahl der Epochen, die Lernrate und andere Einstellungen anpassen.
-Die commandline parameter sind wie folgt definiert:
-\begin{itemize}
-    \item \option{-D}: Startet das Netzwerk mit vordefinierten Default-Parametern.
-    \item \option{-d}: Dropout-Rate (setzt zufällige Neuronen auf 0 während des Forward Pass und der Backpropagation, z.\,B.\ 0{,}1 für 10\% Dropout-Rate).
-    \item \option{-v}: Aktivierung der Visualisierung während des Trainings mit dem MNIST-Datensatz.
-    \item \option{-m~\textless{}modus\textgreater{}}: Ausführungsmodus (\option{sequential}, \option{parallel}, \option{simd}).
-    \item \option{-t~\textless{}numTrainingSets\textgreater{}}: Anzahl der Trainingsdaten (z.\,B.\ 60\,000 für den gesamten MNIST-Datensatz).
-    \item \option{-i~\textless{}numInputs\textgreater{}}: Anzahl der Eingangsneuronen (784 für MNIST).
-    \item \option{-h~\textless{}numHiddenNodes\textgreater{}}: Anzahl der Neuronen in der versteckten Schicht (z.\,B.\ 128).
-    \item \option{-o~\textless{}numOutputs\textgreater{}}: Anzahl der Ausgangsneuronen (z.\,B.\ 10 für die 10 Ziffern).
-    \item \option{-e~\textless{}epochs\textgreater{}}: Anzahl der Epochen für das Training.
-    \item \option{-l~\textless{}learningRate\textgreater{}}: Lernrate (z.\,B.\ 0{,}01).
-    \item \option{-n~\textless{}numThreads\textgreater{}}: Setzt die Anzahl an verwendeten Threads fest, die beim Ausführen einer Parallelregion benutzt werden.
-    \item \option{-?} oder \option{---help}: Zeigt die verfügbaren Kommandozeilenoptionen.
-\end{itemize}
+Durch die Verwendung von \texttt{getopt\_long()} ist es den Nutzern möglich, das mpt\_nn beim starten nach belieben zu konfigurieren. 
+Der Nutzer kann Parameter wie den Modus (sequenziell, parallel, SIMD), die Anzahl der Epochen, die Lernrate und diverse andere Einstellungen anpassen.
+Eine vollständige Auflistung aller \texttt{command line}-Parameter kann der im Gitlab hinterlegten \texttt{ReadMe} entnommen werden.
 Es ist wichtig zu beachten, das dass mpt\_nn gewisse Parameter vorraussetzt um es starten zu können.\\
-\option{-D}, da diese Defaultwerte für das starten des Netzwerkes setzr oder \\
-\option{-t, -m, -i, -h, -o, -e, -l} bilden hierbei die nötigen Parameter.
+\option{-D}, startet das Netzwerk unter festgelegten Defaultwerten \\
+\option{-t, -m, -i, -h, -o, -e, -l} bildet ein Netzwerk mit gewünschter Parametrisierung.
+
 \subsubsection{Initialisierung}
 
-Nach dem Einlesen der Parameter werden die Datenstrukturen für das Netzwerk initialisiert. Dies umfasst die Allokation von Speicher für die Gewichte, Biases und Datenarrays.
+Nach dem Einlesen der Parameter werden die Datenstrukturen für das Netzwerk initialisiert. Dies umfasst die Allokation von Speicher für die Gewichte, Bias und Datenarrays.
 
 \subsubsection{Training des Netzwerks}
 
-Das Training erfolgt über eine festgelegte Anzahl von Epochen. In jeder Epoche wird der gesamte Trainingssatz durchlaufen. Für jeden Trainingsdatensatz werden die folgenden Schritte ausgeführt:
-
-\begin{enumerate}
-    \item \textbf{Vorwärtsdurchlauf}: Berechnung der Ausgaben des Netzwerks.
-    \item \textbf{Berechnung des Fehlers}: Vergleich der Ausgaben mit den Zielwerten.
-    \item \textbf{Rückwärtsdurchlauf}: Aktualisierung der Gewichte und Biases basierend auf dem Fehler.
-\end{enumerate}
+Das Training erfolgt über eine festgelegte Anzahl von Epochen. In jeder Epoche wird der gesamte 
+Trainingssatz durchlaufen und für jeden Trainingssatz die in \autoref{chapter..2.3} genannten
+Schritte (I - III) umgesetzt.
 
 Nach jeder Epoche werden der durchschnittliche Verlust und die Genauigkeit berechnet und ausgegeben.
 
@@ -644,7 +632,7 @@ Die Datei \texttt{mpt\_nn\_test.c} enthält Unit-Tests, die sicherstellen, dass 
 
 \subsubsection{test\_sigmoid()}
 
-Überfprüft, ob die Sigmoid-Funktion und ihre Ableitung für bekannte Eingaben die erwarteten Ausgaben liefern.
+Überprüft, ob die Sigmoid-Funktion und ihre Ableitung für bekannte Eingaben die erwarteten Ausgaben liefern.
 
 \subsubsection{test\_initialize\_weights()}
 
@@ -653,8 +641,7 @@ Testet die Initialisierung der weights, um sicherzustellen, dass die Gewichte un
 \subsubsection{test\_forward\_pass(), test\_backpropagation()}
 
 Überprüft, ob die Berechnungen korrekt durchgeführt werden und die Ausgaben plausibel sind.
-Funktioniert gleich für jeweils alle drei implementierung von forwardpass und backpropagation.
-
+Dies Funktioniert für jeweils alle drei Implementierung des Forwardpass und Backpropagation gleich.
 
 \newpage %PAGEBREAK
 
@@ -695,7 +682,7 @@ an Epochen verbessert.
 Für den Testlauf wurde der Algorithmus in der parallelen Verarbeitungsweise ausgeführt. Diese 
 ermöglicht die gleichzeitige Verarbeitung mehrerer Threads, was zu einer beschleunigten Berechnung 
 führt. Im \textbf{Input-Layer} wurden Daten eines 28x28-Pixel-Bildes verwendet, was 784 
-Eingabeneuronen entspricht. Die Daten basieren auf dem in \autoref{label..mnist} beschriebenen 
+Eingabeneuronen entspricht. Die Daten basieren auf dem in \autoref{chapter..3.1} beschriebenen 
 MNIST-Datensatz.\\
 Der \textit{Output-Layer} besteht aus 10 Neuronen, die jeweils für eine Ziffer von 0 bis 9 stehen. 
 Der Algorithmus bewertet, ob die erkannte Zahl korrekt klassifiziert wurde, indem das Ergebnis mit 
@@ -819,7 +806,139 @@ ohne mathematische Glättung.
 \newpage %PAGEBREAK
 \clearpage
 
-\section{Auswertung und Fazit}
+\section{Auswertung}\label{chapter..5}
+
+Der vorletzte Abschnitt dieser Arbeit widmet sich der Analyse und Interpretation 
+der erzielten Resultate. Die in \autoref{chapter..4} gewonnenen Ergebnisse werden im 
+Hinblick auf ihren Inhalt und ihre Aussagekraft untersucht und reflektiert. Im 
+Rahmen dieser Auswertung werden sowohl die durchgeführten Benchmark-Tests als auch 
+die Genauigkeitsanalysen herangezogen, um die Leistungsfähigkeit der verschiedenen 
+Algorithmen zu bewerten.\\
+Anhand der Resultate lassen sich die Stärken und Schwächen der implementierten 
+Methoden herausarbeiten. Darauf aufbauend werden mögliche Ansätze zur Optimierung 
+und Verbesserung der Algorithmen vorgestellt und diskutiert.
+
+\subsection{Benchmark}\label{chapter..5.1}
+
+In \autoref{fig:plot} sind die Ausführungszeiten der verschiedenen Algorithmen 
+dargestellt. Die Tests wurden auf einem Lenovo Laptop mit einem \textit{AMD Ryzen 5 5500U}
+Prozessor durchgeführt. Während der Testläufe wurde der Computer nicht durch zusätzliche 
+Programme belastet.\\
+Aus der Grafik wird deutlich, dass sowohl die parallele als auch die 
+SIMD-Implementierung zu einer signifikanten Reduktion der Trainingszeiten führen. Die 
+Grafik zeigt sowohl die maximale und minimale Trainingszeit als auch deren Mittelwert. 
+Die konkreten Ausführungszeiten, absteigend nach ihren maximalen Werten sortiert, 
+lauten wie folgt:
+
+\begin{center}
+	\begin{tabular}{c c c}
+	\textbf{(I)} & Sequentiell: & 109,24\,s \\
+	\textbf{(II)} & Parallel: & 82,35\,s \\
+	\textbf{(III)} & SIMD: & 66,71\,s \\
+	\end{tabular}
+\end{center}
+	
+Insbesondere bei der sequentiellen Ausführung ist eine signifikante Abweichung zwischen 
+der maximalen und der minimalen Trainingszeit zu beobachten. Diese Abweichungen treten 
+bei den parallelen und SIMD-Implementierungen deutlich geringer auf. Da alle Methoden jedoch
+durch \texttt{Hyperfine} nacheinander und unter der gleichen Bedingung ausgeführt wurden,
+deutet dies darauf hin, dass systembedingte Schwankungen, wie etwa thermische Drosselung 
+(\textit{Throttling}) aufgrund von Überhitzung der CPU, als Ursache ausgeschlossen 
+werden können. 
+Cache-Misses oder Task-Scheduling was ebenfalls zu Verzögerungen durch ausgelagerte 
+Prozesse führen kann, können für die sequentielle Ausführung ebenfalls ausgeschlossen werden,
+da solch ein Verhalten eher dem parallelen- oder SIMD-Algorithmus zugeschrieben werden könnte.\\
+Auch Fehler im Datensatz können ausgeschlossen werden, da der MNIST-Datensatz verwendet 
+wurde, welcher zu den bekanntesten Trainingsdatensätzen gehört und in allen Algorithmen 
+gleichmäßig sowie mit der gleichen Testhäufigkeit verarbeitet wurde.\\
+Die wahrscheinlichste Ursache für die signifikanten Abweichungen in der sequentiellen 
+Ausführung liegt daher vermutlich im Algorithmus selbst. Wie auch bei den anderen 
+Methoden besteht ein hoher Grad an Variabilität aufgrund unterschiedlicher 
+Initialisierungszustände. Allerdings zeigt die sequentielle Verarbeitung eine deutlich 
+langsamere Konvergenz zwischen den einzelnen Schichten des neuronalen Netzes im 
+Vergleich zu den parallelen und SIMD-Methoden. Diese Variabilität wird jedoch im Verlauf 
+des Trainings effizient reduziert, was zu einer schnelleren Bearbeitungszeit führt. 
+Diese bleibt zwar im Vergleich zur SIMD-Verarbeitung fast doppelt so hoch, ist jedoch 
+deutlich schneller als im anfänglichen, zufällig gewichteten Zustand.\\
+Abschließend zeigt die Analyse, dass die Nutzung von Parallelisierungs- und SIMD-Methoden 
+zur Optimierung der Gewichte des neuronalen Netzes eine äußerst effiziente Technik 
+darstellt.
+
+\subsection{Genauigkeit}\label{chapter..5.2}
+
+\autoref{fig:accuracy} und \autoref{fig:accuracy2} bieten einen differenzierten Einblick 
+in die Lernmethodik der Algorithmen. Im Gegensatz zur Trainingszeit und deren 
+Optimierung wird hier die Genauigkeit der neuronalen Identifizierung der Bilddaten über 
+einen Lernzeitraum von 10 Epochen dargestellt.\\
+Wie aus \autoref{fig:accuracy} ersichtlich, erreichen alle drei Methoden in der letzten 
+Epoche eine ähnliche Genauigkeit von etwa 96\,\%. Obwohl die sequentielle Methode zu 
+Beginn marginal hinter den parallelen und SIMD-Methoden liegt, übertrifft sie diese am 
+Ende der Trainingsphase um wenige Bruchteile.\\
+Betrachtet man zusätzlich \autoref{fig:accuracy2}, so lassen sich signifikante 
+Schwankungen bei der SIMD-Methode in der ersten Epoche beobachten. Dieser Trend setzt 
+sich bis zur zehnten Epoche fort, wobei auch die parallele Methode ein vergleichbares 
+Verhalten zeigt.\\
+Über den gesamten Verlauf hinweg übertrifft einzig die sequentielle Methode beide 
+anderen Ansätze. Da jedoch, wie in \autoref{fig:accuracy} dargestellt, der Trendverlauf 
+für alle Methoden ähnlich ist, scheinen die Schwankungen bei der sequentiellen Methode 
+über den gesamten Zeitraum betrachtet dennoch größer zu sein als bei den verbleibenden 
+Algorithmen.\\
+Der Umstand, dass alle drei Methoden eine ähnliche Genauigkeit erreichen, lässt sich 
+dadurch erklären, dass sie denselben Datensatz verwenden. Obwohl die Methoden 
+hinsichtlich der Berechnungszeit Unterschiede aufweisen, liegt der Fokus des neuronalen 
+Netzes auf der Optimierung der Endgenauigkeit. Dadurch kann ein sehr ähnliches 
+Endresultat erzielt werden.\\
+Die größeren Schwankungen bei den Methoden Parallel und SIMD sowie die daraus 
+resultierende geringfügig niedrigere Genauigkeit sind auf die jeweilige Art der 
+Verarbeitung zurückzuführen. Bei der parallelen Berechnung werden mehrere Threads 
+genutzt, um die Aufgaben gleichzeitig auszuführen. Dies kann bei der anschließenden 
+Zusammenführung der Ergebnisse zu Synchronisierungsproblemen führen.\\
+Die SIMD-Methode verarbeitet mehrere Daten simultan auf Vektorebene. Dadurch kann es 
+insbesondere in den ersten Epochen zu einer erhöhten Variabilität in der Genauigkeit 
+kommen.
+
+\subsection{Ansätze zur Verbesserung}\label{chapter..5.3}
+
+Die vorliegenden Ergebnisse könnten durch verschiedene Ansätze verbessert werden. Eine 
+Möglichkeit liegt in der Wahl der verwendeten Aktivierungsfunktionen. In allen drei 
+Methoden wurde die Sigmoid-Funktion eingesetzt. Wie bereits in \autoref{tab:Aktivierungsfunktion} 
+erwähnt, existieren jedoch weitere, effizientere Aktivierungsfunktionen. Funktionen wie 
+ReLU oder Softmax können schnellere und deutlich effektivere Konvergenzen während des 
+Trainingsprozesses ermöglichen.\\
+Der Einsatz von ReLU in den Hidden Layers könnte ebenfalls zu einer Steigerung der 
+Genauigkeit führen. Dies ließe sich durch eine verbesserte Lernkapazität und 
+-geschwindigkeit erreichen. Die Softmax-Funktion wird häufig im Output-Layer von 
+Netzwerken verwendet, insbesondere in Szenarien, bei denen mehrere Klassen vorhergesagt 
+werden.\\
+Zusätzlich wurde durch den Einsatz von \textit{helgrind} festgestellt, dass insbesondere zu 
+Beginn des Trainingsprozesses ein hohes Maß an \textit{Race-Conditions} auftrat. Durch 
+Anpassungen im Code konnte dieses Problem teilweise reguliert werden, jedoch stellt die 
+Funktion \texttt{forward\_pass\_parallel} weiterhin eine Herausforderung dar.\\
+Weiterhin könnte die Forward- und Backpropagation durch eine stärkere Parallelisierung 
+der Summierungen in den Hidden- und Output-Layers optimiert werden.
+
+\newpage %PAGEBREAK
+
+\section{Fazit}
+
+Abschließend lässt sich für das Projekt im Fach "Mikroprozessortechnik" festhalten, 
+dass alle Ziele der Aufgabenstellung erreicht wurden. Darüber hinaus wurden eigene 
+Ziele und Verbesserungsmöglichkeiten implementiert und ein lernfähiges neuronales 
+Netzwerk erfolgreich entwickelt.\\
+Zu Beginn stellte vor allem die theoretische Erarbeitung der mathematischen Herleitungen 
+eine größere Herausforderung dar. Mit fortschreitender Bearbeitung rückte dieses 
+Problem jedoch zunehmend in den Hintergrund und die mathematischen Zusammenhänge wurden 
+gegen Ende des Projekts klarer und verständlicher.\\
+Die Implementierung der Ziele in der Programmiersprache C erwies sich ebenfalls 
+zunächst als anspruchsvoll. Zwar existierten einige hilfreiche Foren und Artikel im 
+Internet, viele Funktionen mussten jedoch an unsere spezifischen Anforderungen angepasst 
+werden.\\
+Der Einsatz des MNIST-Datensatzes als Lernquelle für unser neuronales Netzwerk stellte 
+sich durch die Unterstützung und Hinweise unserer betreuenden Professoren zur 
+Bildverarbeitung und Datenextraktion als sehr valide Grundlage heraus.\\
+Im Verlauf des Projekts konnten wir unsere Programmierfähigkeiten in C deutlich 
+verbessern, ein umfassendes Verständnis für die Thematik neuronaler Netze entwickeln 
+sowie unsere Kenntnisse in der Dokumentation mittels \LaTeX{} vertiefen.
 
 \newpage %PAGEBREAK
 

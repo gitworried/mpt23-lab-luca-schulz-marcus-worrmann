@@ -56,70 +56,78 @@
 \newlabel{chapter..3}{{3}{13}{Implementierung des neuronalen Netzwerks}{section.3}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.1}MNIST-Datensatz}{13}{subsection.3.1}\protected@file@percent }
 \newlabel{chapter..3.1}{{3.1}{13}{MNIST-Datensatz}{subsection.3.1}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {4}Implementierung des neuronalen Netzwerks in C}{14}{section.4}\protected@file@percent }
-\newlabel{sec:implementierung}{{4}{14}{Implementierung des neuronalen Netzwerks in C}{section.4}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.1}Verwendung von OpenMP}{14}{subsection.4.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.2}mpt\_nn}{15}{subsection.4.2}\protected@file@percent }
-\newlabel{subsec:mpt_nn}{{4.2}{15}{mpt\_nn}{subsection.4.2}{}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {I}Aktivierungsfunktionen}{15}{subsubsection.4.2.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {II}ForwardPass(forwardpropagation)}{15}{subsubsection.4.2.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2}Implementierung in C}{14}{subsection.3.2}\protected@file@percent }
+\newlabel{sec:implementierung}{{3.2}{14}{Implementierung in C}{subsection.3.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.3}Verwendung von OpenMP}{14}{subsection.3.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.4}mpt\_nn}{15}{subsection.3.4}\protected@file@percent }
+\newlabel{subsec:mpt_nn}{{3.4}{15}{mpt\_nn}{subsection.3.4}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {I}Aktivierungsfunktionen}{15}{subsubsection.3.4.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {II}ForwardPass(Forwardpropagation)}{15}{subsubsection.3.4.2}\protected@file@percent }
 \newlabel{fhidden}{{1}{15}{forwardpass hidden}{lstlisting.1}{}}
 \@writefile{lol}{\contentsline {lstlisting}{\numberline {1}forwardpass hidden}{15}{lstlisting.1}\protected@file@percent }
 \newlabel{foutput}{{2}{16}{forwardpass output}{lstlisting.2}{}}
 \@writefile{lol}{\contentsline {lstlisting}{\numberline {2}forwardpass output}{16}{lstlisting.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{sequential}{16}{section*.9}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{parallel}{16}{section*.10}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{sequential:}{16}{section*.9}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{parallel:}{16}{section*.10}\protected@file@percent }
 \newlabel{fparallel}{{3}{16}{forwardpass parallel}{lstlisting.3}{}}
 \@writefile{lol}{\contentsline {lstlisting}{\numberline {3}forwardpass parallel}{16}{lstlisting.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{simd}{17}{section*.11}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{simd:}{16}{section*.11}\protected@file@percent }
 \newlabel{fsimd}{{4}{17}{forwardpass simd}{lstlisting.4}{}}
 \@writefile{lol}{\contentsline {lstlisting}{\numberline {4}forwardpass simd}{17}{lstlisting.4}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {III}Backpropagation}{17}{subsubsection.4.2.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {III}Backpropagation}{17}{subsubsection.3.4.3}\protected@file@percent }
 \newlabel{bouterr}{{5}{17}{backpropagation outputerr}{lstlisting.5}{}}
 \@writefile{lol}{\contentsline {lstlisting}{\numberline {5}backpropagation outputerr}{17}{lstlisting.5}\protected@file@percent }
-\newlabel{bdeltah}{{6}{18}{backpropagation deltaHidden}{lstlisting.6}{}}
-\@writefile{lol}{\contentsline {lstlisting}{\numberline {6}backpropagation deltaHidden}{18}{lstlisting.6}\protected@file@percent }
+\newlabel{bdeltah}{{6}{17}{backpropagation deltaHidden}{lstlisting.6}{}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {6}backpropagation deltaHidden}{17}{lstlisting.6}\protected@file@percent }
 \newlabel{bweights}{{7}{18}{backpropagation weights}{lstlisting.7}{}}
 \@writefile{lol}{\contentsline {lstlisting}{\numberline {7}backpropagation weights}{18}{lstlisting.7}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.3}mpt\_nn\_utility}{18}{subsection.4.3}\protected@file@percent }
-\newlabel{subsec:mpt_nn_utility}{{4.3}{18}{mpt\_nn\_utility}{subsection.4.3}{}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {I}load\_mnist}{19}{subsubsection.4.3.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {II}initialize\_weights(), initialize\_bias()}{19}{subsubsection.4.3.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {III}apply\_dropout()}{19}{subsubsection.4.3.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {IV}visualize\_mnist\_digit()}{19}{subsubsection.4.3.4}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {V}print\_options()}{19}{subsubsection.4.3.5}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.4}main}{19}{subsection.4.4}\protected@file@percent }
-\newlabel{subsec:main}{{4.4}{19}{main}{subsection.4.4}{}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {I}Verarbeitung der command line Parameter}{19}{subsubsection.4.4.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {II}Initialisierung}{20}{subsubsection.4.4.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {III}Training des Netzwerks}{21}{subsubsection.4.4.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {IV}Speicherfreigabe}{21}{subsubsection.4.4.4}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.5}mpt\_nn\_tests}{21}{subsection.4.5}\protected@file@percent }
-\newlabel{subsec:mpt_nn_tests}{{4.5}{21}{mpt\_nn\_tests}{subsection.4.5}{}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {I}test\_sigmoid()}{21}{subsubsection.4.5.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {II}test\_initialize\_weights()}{21}{subsubsection.4.5.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {III}test\_forward\_pass(), test\_backpropagation()}{21}{subsubsection.4.5.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {5}Ergebnisse}{22}{section.5}\protected@file@percent }
-\newlabel{chapter..4}{{5}{22}{Ergebnisse}{section.5}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.1}Erste Testläufe}{22}{subsection.5.1}\protected@file@percent }
-\newlabel{chapter..4.1}{{5.1}{22}{Erste Testläufe}{subsection.5.1}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces Genutzte Parameter des Testlaufs\relax }}{22}{table.caption.12}\protected@file@percent }
-\newlabel{tab:testparas}{{3}{22}{Genutzte Parameter des Testlaufs\relax }{table.caption.12}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {4}{\ignorespaces Ergebnisse der Trainings-Epochen\relax }}{23}{table.caption.13}\protected@file@percent }
-\newlabel{tab:testresults}{{4}{23}{Ergebnisse der Trainings-Epochen\relax }{table.caption.13}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.2}Benchmarkanalyse mit Hyperfine}{24}{subsection.5.2}\protected@file@percent }
-\newlabel{chapter..4.2}{{5.2}{24}{Benchmarkanalyse mit Hyperfine}{subsection.5.2}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Makefile Hyperfineskript\relax }}{24}{figure.2}\protected@file@percent }
-\newlabel{fig:Hyperfine}{{2}{24}{Makefile Hyperfineskript\relax }{figure.2}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Benchmarkergebnisse mit Hyperfine\relax }}{25}{figure.caption.14}\protected@file@percent }
-\newlabel{fig:plot}{{3}{25}{Benchmarkergebnisse mit Hyperfine\relax }{figure.caption.14}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.3}Lernfortschritt und Vorhersagbarkeit}{25}{subsection.5.3}\protected@file@percent }
-\newlabel{chapter..4.3}{{5.3}{25}{Lernfortschritt und Vorhersagbarkeit}{subsection.5.3}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Mittelwerte der Genauigkeiten\relax }}{26}{figure.caption.15}\protected@file@percent }
-\newlabel{fig:accuracy}{{4}{26}{Mittelwerte der Genauigkeiten\relax }{figure.caption.15}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Genauigkeiten der einzelnen Algorithmen\relax }}{26}{figure.caption.16}\protected@file@percent }
-\newlabel{fig:accuracy2}{{5}{26}{Genauigkeiten der einzelnen Algorithmen\relax }{figure.caption.16}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {6}Auswertung und Fazit}{27}{section.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.5}mpt\_nn\_utility}{18}{subsection.3.5}\protected@file@percent }
+\newlabel{subsec:mpt_nn_utility}{{3.5}{18}{mpt\_nn\_utility}{subsection.3.5}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {I}load\_mnist}{18}{subsubsection.3.5.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {II}initialize\_weights(), initialize\_bias()}{18}{subsubsection.3.5.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {III}apply\_dropout()}{19}{subsubsection.3.5.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {IV}visualize\_mnist\_digit()}{19}{subsubsection.3.5.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {V}print\_options()}{19}{subsubsection.3.5.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.6}main}{19}{subsection.3.6}\protected@file@percent }
+\newlabel{subsec:main}{{3.6}{19}{main}{subsection.3.6}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {I}Verarbeitung der command line Parameter}{19}{subsubsection.3.6.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {II}Initialisierung}{19}{subsubsection.3.6.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {III}Training des Netzwerks}{20}{subsubsection.3.6.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {IV}Speicherfreigabe}{20}{subsubsection.3.6.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.7}mpt\_nn\_tests}{20}{subsection.3.7}\protected@file@percent }
+\newlabel{subsec:mpt_nn_tests}{{3.7}{20}{mpt\_nn\_tests}{subsection.3.7}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {I}test\_sigmoid()}{20}{subsubsection.3.7.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {II}test\_initialize\_weights()}{20}{subsubsection.3.7.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {III}test\_forward\_pass(), test\_backpropagation()}{20}{subsubsection.3.7.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {4}Ergebnisse}{21}{section.4}\protected@file@percent }
+\newlabel{chapter..4}{{4}{21}{Ergebnisse}{section.4}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.1}Erste Testläufe}{21}{subsection.4.1}\protected@file@percent }
+\newlabel{chapter..4.1}{{4.1}{21}{Erste Testläufe}{subsection.4.1}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces Genutzte Parameter des Testlaufs\relax }}{21}{table.caption.12}\protected@file@percent }
+\newlabel{tab:testparas}{{3}{21}{Genutzte Parameter des Testlaufs\relax }{table.caption.12}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {4}{\ignorespaces Ergebnisse der Trainings-Epochen\relax }}{22}{table.caption.13}\protected@file@percent }
+\newlabel{tab:testresults}{{4}{22}{Ergebnisse der Trainings-Epochen\relax }{table.caption.13}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2}Benchmarkanalyse mit Hyperfine}{23}{subsection.4.2}\protected@file@percent }
+\newlabel{chapter..4.2}{{4.2}{23}{Benchmarkanalyse mit Hyperfine}{subsection.4.2}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Makefile Hyperfineskript\relax }}{23}{figure.2}\protected@file@percent }
+\newlabel{fig:Hyperfine}{{2}{23}{Makefile Hyperfineskript\relax }{figure.2}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Benchmarkergebnisse mit Hyperfine\relax }}{24}{figure.caption.14}\protected@file@percent }
+\newlabel{fig:plot}{{3}{24}{Benchmarkergebnisse mit Hyperfine\relax }{figure.caption.14}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3}Lernfortschritt und Vorhersagbarkeit}{24}{subsection.4.3}\protected@file@percent }
+\newlabel{chapter..4.3}{{4.3}{24}{Lernfortschritt und Vorhersagbarkeit}{subsection.4.3}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Mittelwerte der Genauigkeiten\relax }}{25}{figure.caption.15}\protected@file@percent }
+\newlabel{fig:accuracy}{{4}{25}{Mittelwerte der Genauigkeiten\relax }{figure.caption.15}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Genauigkeiten der einzelnen Algorithmen\relax }}{25}{figure.caption.16}\protected@file@percent }
+\newlabel{fig:accuracy2}{{5}{25}{Genauigkeiten der einzelnen Algorithmen\relax }{figure.caption.16}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {5}Auswertung}{26}{section.5}\protected@file@percent }
+\newlabel{chapter..5}{{5}{26}{Auswertung}{section.5}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.1}Benchmark}{26}{subsection.5.1}\protected@file@percent }
+\newlabel{chapter..5.1}{{5.1}{26}{Benchmark}{subsection.5.1}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.2}Genauigkeit}{27}{subsection.5.2}\protected@file@percent }
+\newlabel{chapter..5.2}{{5.2}{27}{Genauigkeit}{subsection.5.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.3}Ansätze zur Verbesserung}{28}{subsection.5.3}\protected@file@percent }
+\newlabel{chapter..5.3}{{5.3}{28}{Ansätze zur Verbesserung}{subsection.5.3}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {6}Fazit}{29}{section.6}\protected@file@percent }
 \bibstyle{plain}
 \bibdata{refs}
 \bibcite{kriesel2007kleiner}{{1}{}{{}}{{}}}
@@ -128,4 +136,4 @@
 \bibcite{rey2019neuronale}{{4}{}{{}}{{}}}
 \bibcite{MNIST-Datensatz}{{5}{}{{}}{{}}}
 \providecommand\NAT@force@numbers{}\NAT@force@numbers
-\gdef \@abspage@last{28}
+\gdef \@abspage@last{30}

@@ -1,9 +1,9 @@
-PWD /home/luca/source/repos/uni/mpt23-lab-marcus-worrmann-luca-schulz/Documentation/Doku
+PWD /home/userkiste/Documents/MPT2/mpt23-lab-marcus-worrmann-luca-schulz/Documentation/Doku
 INPUT /etc/texmf/web2c/texmf.cnf
 INPUT /usr/share/texmf/web2c/texmf.cnf
 INPUT /usr/share/texlive/texmf-dist/web2c/texmf.cnf
-INPUT /home/luca/.texlive2021/texmf-var/web2c/pdftex/pdflatex.fmt
-INPUT /home/luca/source/repos/uni/mpt23-lab-marcus-worrmann-luca-schulz/Documentation/Doku/Dokumentation.tex
+INPUT /var/lib/texmf/web2c/pdftex/pdflatex.fmt
+INPUT /home/userkiste/Documents/MPT2/mpt23-lab-marcus-worrmann-luca-schulz/Documentation/Doku/Dokumentation.tex
 OUTPUT Dokumentation.log
 INPUT /usr/share/texlive/texmf-dist/tex/latex/base/article.cls
 INPUT /usr/share/texlive/texmf-dist/tex/latex/base/article.cls
@@ -1063,7 +1063,6 @@ INPUT /usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb
 INPUT /usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb
 INPUT /usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb
 INPUT /usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy6.pfb
-INPUT /usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb
 INPUT /usr/share/texmf/fonts/type1/public/cm-super/sfbx1200.pfb
 INPUT /usr/share/texmf/fonts/type1/public/cm-super/sfbx1440.pfb
 INPUT /usr/share/texmf/fonts/type1/public/cm-super/sfbx1728.pfb
