@@ -45,6 +45,10 @@ Die Parameter sind wie folgt definiert:
 - `-n <numThreads>` : Setzt die Anzahl an verwendetend Threads fest, die beim ausführen eine Parallelregion benutzt werden
 - `-? <--help>` : Zeigt die verfügbaren Kommandozeilenoptionen
 
+**WICHTIG:** Das mpt_nn setzt gewisse Parameter zum starten vorraus. Entweder nur `-D`, da dieser vordefinierte default Parameter setzt,
+oder `-t , -m, -i, -h. -o, -e, -l` um das Netzwerk nach belieben zu knfigurieren. Die restilichen Parameter sind optional und sorgen für
+weiter knofigurations Möglichkeiten.
+
 **INFO:** Beim wälen der Dropout Rate ist es wichtig die Größe des Netzwerkes in Betracht zu ziehen.
 Obwohl eine Dropout Rate in der Regel zu natürlicheren Ergebnissen führen kann ist es wahrscheinlich, dass eine zu hohe
 Dropout Rate bei einem kleinen Netzwerk eher für schlechtere Ergebnisse sorgen wird. <br>
@@ -138,18 +142,16 @@ make plot-accuracy
 Die Ergebnisse beider Auswertungen stehen im entsprechenden Benchmark-Verzeichnis zur Verfügung.
 
 ## Dokumentation
-
-Für eine detaillierte übersicht der Funktionen des mpt_nn ist, lässt sich eine doxygen Dokumentation mit make erstellen.<br>
-
+### Doxygen
+Neben der vorhandenen Wissenschaftlichen Arbeit zum Projekt sind alle funktionen mittels doxygen Kommentaren beschrieben.
+Doxygen ist ein automatisiertes Dokumentationswerkzeug, das Quellcode analysiert und daraus strukturierte, lesbare Dokumentationen in verschiedenen Formaten generiert.
+Ein Doxyfile, das für die Konfiguration der doxygen Dokumentation gebraucht wird, ist in dem Projektordner zu finden.
+Doxygen kann über die Kommandozeile installieren.
+```bash
+sudo apt-get install doxygen
+```
+Anschließen lässt sich für eine detaillierte übersicht der Funktionen des mpt_nn, eine doxygen Dokumentation mit make erstellen.<br>
 ```bash
 make doxygen
 ```
-Der befehlt baut ein doxygen Projekt in dem ordner Dokumentation und compiliert eine PDF in dem dazugehörigen latex ordner.
-## TODO
-
-- [x] Doxygen Doku<br>
-- [x] Benchmark Visualisierung (Mit python script oder R?) <br>
-- [x] Villeicht: Default Parameter zum starten des mpt_nn (z.B angepasst an den MNIST-Datensatz, also 60000 trainingsdaten, 784 eingangsneuronen... etc)<br>
-- [x] Code optimieren(Benchmarks) Zurzeit kommen komische Benchmark Ergebnisse raus. Sequentielles ausführen ist in den meisten Fällen deutlich schneller als parallel und SIMD. Das kann natürlich sein, aber ist eher unwahrscheinlich. (Programm auf mehreren Maschinen testen).<br>
-- [x] Code optimieren(helgrind, valgrind): helgrind zeigt noch etliche potentielle race conditions an.<br>
-- [ ] Doku schreiben.<br>
+Der Befehlt baut ein doxygen Projekt in dem ordner Documentation und compiliert eine PDF in dem dazugehörigen latex ordner.
